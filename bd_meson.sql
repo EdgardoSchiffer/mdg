@@ -55,11 +55,11 @@ constraint fk_platillos_reservacion foreign key (id_platillo) references platill
 create table galeria(
 id int primary key auto_increment,
 descripcion varchar(500),
-ruta(500)
+ruta varchar(500)
 );
 
 create table promociones(
 id int primary key auto_increment,
 descripcion varchar(500),
-ruta(500)
+ruta varchar(500)
 );
