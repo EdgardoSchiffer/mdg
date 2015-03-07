@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Page Title</title>
+
+	<meta name="viewport" content="width=device-width" content="height=device-height" charset="UTF-8">
+<link rel="stylesheet" href="css/mdg.min.css" />
+<link rel="stylesheet" type="text/css" href="css/mobipick.css">
+		<link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
+		<link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery.mobile-1.4.0-rc.1.js"></script>
+<script type="text/javascript" src="js/xdate.js"></script>
+<script type="text/javascript" src="js/mobipick.js"></script>
+<script type="text/javascript" src="js/jqm-spinbox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.timepicker.min.css">
+<script type="text/javascript" src="js/jquery.timepicker.min.js"></script>
+<script type="text/javascript">
+	$.ajaxSetup({
+	  timeout: 2000
+	});
+	$( document ).on( "pagecreate", "#reservacion", function() {
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	if(dd<10) {
+	    dd='0'+dd
+	} 
+	if(mm<10) {
+	    mm='0'+mm
+	} 
+	today = yyyy+'-'+mm+'-'+dd;	
+	document.getElementById("fecha").setAttribute("min", today);
+    var picker = $( "input[type='date']", this );
+    $('#hora').timepicker({
+    	 timeFormat: 'HH:mm',
+    	 minTime: '08:00:00',
+    	 maxTime: '21:00:00',
+    	 interval: 30
+    });
+    picker.mobipick({
+    	locale: "ES"
+    });
+});
+	function logout(){
+		localStorage.clear();
+		$.mobile.changePage( "#login" , { role: "page" } );
+	}
+	$( "document" ).ready(function(){
+		if (localStorage.getItem('usuario') == null) {
+			$.mobile.changePage( "#login" , { role: "page" } );
+		};
+		if (localStorage.getItem('usuario') != null) {
+			$.mobile.changePage( "#principal" , { role: "page "});
+		};
+	});
+
+</script>
+</head>
+
+<style type="text/css">
+
+	#logg{
+        
+		font-family: Andalus;
+		font-size: 20px;
+		color: blue;
+
+	}
+	.lis{
+		padding: 2px;
+		width: 95%;
+		border-radius: 12%;
+	}
+	#buscarc{
+       border: none;
+       margin-bottom: 10px;
+		margin-left: 60%;
+		padding-bottom: 2px;
+	}
+	.text{
+		color: white;
+		padding: 3px;
+	}
+
+	.popup{
+		opacity: 1;
+		background: black;
+		width: 100%;
+		height: 20%;
+		box-shadow: 5px 5px 20px black;
+		text-align: center;
+	}
+
+	.txtPop{
+		background: #0F8888;
+		padding: 10px 30px 10px 30px;
+		color: whitesmoke;
+		border: solid 1px white;
+	}
+
+	.img{
+	    position:absolute;
+	    left: 5px;
+	    top: 8px;
+	    width: 22px;
+	    opacity: 0.65;
+	    padding-left: 2px;
+	}
+	.cajas{
+		position: relative;
+	}
+	.cajas input{
+		text-indent: 30px;
+	}
+</style>
+<body >
+
+
+
+<div data-role="page" data-theme="a" id="login">
+	<div data-role="header"  data-theme="a">
+			<a href="../index.html" rel="external" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true"></a>
+	</div>
+	<script type="text/javascript">
+			$(document).ready(function(){
+				$("#btnlogin").click(function(){
+					if (validarLogin() == true) {
+						var url = "http://localhost/php/login.php";
+						$.getJSON(url ,{correo:$("#email").val(), pass:$("#pwd").val()}, mostrarDatos)
+						.fail(function(){
+							alert("No se puede conectar al servidor");
+						});
+					}
+				});
+			});
+			function mostrarDatos(datos){
+				if (datos.rol == "Cliente") 
+			    {	  
+                    
+			        localStorage.setItem("usuario", $("#email").val());	
+			    	$.mobile.changePage( "#principal" , { role: "page" } );
+		         } 
+			    else{
+					$("#logtg").text("Credenciales no encontradas.");
+				}
+			}
+
+	</script>
+	<div data-role="content" >
+		<p>
+		    <center><img src="Imagenes/Meson.png" width="250" height="75"></center>
+		    <br>
+
+			<center><div align="center" data-role="button" id="logtg" data-theme="a"> </div></center>
+			<br>
+			<br>
+			<center>
+		    <form role="form" name="login">
+                 <center>
+                 	<div class="cajas">
+					    <input type="email" class="form-control" id="email" placeholder="Correo" name="email" data-theme="a" onblur="loginCorreo();">
+					    <img class="img" src="Imagenes/usr.png" />
+					</div>
+				  </center>
+                 <center>
+                 	<div class="cajas">
+                 		<input type="password" class="form-control" id="pwd" name="pwd" placeholder="Contraseña" data-theme="a">
+                 		<img class="img" src="Imagenes/pwd.png" />
+                 	</div> 
+				  </center>
+                   <center>
+                   <p>
+				  <input  type="button"  id="btnlogin" name="btnlogin" value="Iniciar Sesion" data-theme="a" data-icon="check" /> 
+                  <input  type="button" value="Crear cuenta" data-theme="a" data-icon="edit" onClick="$.mobile.changePage( '#registro' , { role: 'page' } );" /> 
+                  </p>
+                 </center>
+            </form>
+            <script type="text/javascript">
+
+			    function validarLogin(){
+			     	if (document.forms["login"]["email"].value == "") {
+			     		$('#txtLog').html("Ingrese su correo");
+			     		$('#popLogin' ).popup('open');
+			     		return false;
+			     	};
+			     	if (document.forms["login"]["pwd"].value == "") {
+			     		$('#txtLog').html("Ingrese su contraseña");
+			     		$('#popLogin' ).popup('open');
+			     		return false;
+			         };
+			         return true;
+			    }
+				function loginCorreo(){
+					var campo = document.forms['login']['email'].value;
+					var atpos = campo.indexOf("@");
+					var dotpos = campo.lastIndexOf(".");
+					if (atpos< 1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+					    $('#txtLog').html("Correo mal escrito");
+					    $('#popLogin' ).popup('open');
+					    return false;
+					}
+				}
+			</script>
+			<div data-role="popup" id="popLogin" data-overlay-theme="a" class="popup">
+		         <div id="txtLog" class="txtPop"></div>
+		 	</div>
+           </center>
+			
+		</p>
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<!-- Registro de usuarios -->
+<div data-role="page" id="registro">
+
+	<div data-role="header"  data-theme="a">
+		<div class="ui-icon-nodisc">
+		    <a href="index.html" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Home</a>
+		</div>
+
+	</div><!-- /header -->
+
+	    <script type="text/javascript">
+	   $(document).ready(function(){
+			$("#Insertar").click(function(){
+				if (validarReg() == true) {
+				$.getJSON("http://localhost/php/registro.php",
+					{nombre:$("#nombre").val(), 
+					apellido:$("#apellido").val(), 
+					correo:$("#correo").val(),
+					pass:$("#pass").val(),
+					dui:$("#dui").val(),
+					telefono:$("#telefono").val()},
+					mDatos);
+
+					$("#nombre").focus(''),
+				    $("#nombre").val(''), 
+					$("#apellido").val(''), 
+					$("#pass").val(''),
+					$("#dui").val(''),
+					$("#telefono").val('');
+
+		   };
+		});
+	});
+
+	function mDatos(datos){
+		sessionStorage.setItem("usuario", $("#correo").val());	
+		$.mobile.changePage( "#bienvenido" , { role: "page" } );
+	     	
+	}
+	</script>
+
+	<div data-role="content" >
+	<p>
+				<center><h2 style="font-family:Andalus;">Registro de Usuarios</h2></center>
+				<div id="reg"></div>
+	<div id="fr">
+
+		<form data-role="form" name="reg">
+		<center>
+			<div class="form-group">
+				
+				<input type="text"  id="nombre" name="nombre"  data-theme="a" placeholder="Nombre" >
+		    </div>
+			<div class="form-group">
+				
+				<input type="text"   id="apellido" name="apellido" placeholder="Apellido" data-theme="a">
+		    </div>
+			<div class="form-group">
+				
+				<input type="email" class="form-control" id="correo" name="correo" placeholder="Correo"  data-theme="a" onblur="regCorreo();">
+		    </div>	
+		    <div class="form-group">
+					    
+			<input type="password" class="form-control" id="pass" placeholder="Contraseña" name="pass" data-theme="a">
+			</div>	
+		    <div class="form-group">		    
+			<input type="text" class="form-control" id="dui" placeholder="DUI" name="dui" data-theme="a" onblur="regDUI();">
+			</div>	
+		    <div class="form-group">		    
+				<input type="tel" class="form-control" id="telefono" placeholder="Telefono" name="telefono" 
+					data-theme="a">
+			</div>													    		    
+		    <center>
+		    <p>
+			    <input type="reset" data-role="button" data-mini="true" data-theme="a" data-inline="true" value="Limpiar">
+			    <input type="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Ingresar" id="Insertar" name="Insertar">
+			</p>
+			</center>
+	    </center>	    
+        </form>
+        	
+          </div>    
+		</p>
+		<script type="text/javascript">
+        		function validarReg(){
+			     	if (document.forms["reg"]["nombre"].value == "") {
+			     		$('#txtReg').html("Ingrese su nombre");
+			     		$('#popReg' ).popup('open');
+			     		return false;
+			     	};
+			     	if (document.forms["reg"]["apellido"].value == "") {
+			     		$('#txtReg').html("Ingrese su apellido");
+			     		$('#popReg' ).popup('open');
+			     		return false;
+			     	};
+			     	if (document.forms["reg"]["correo"].value == "") {
+			     		$('#txtReg').html("Ingrese su correo");
+			     		$('#popReg' ).popup('open');
+			     		return false;
+			         };
+			     	if (document.forms["reg"]["pass"].value == "") {
+			     		$('#txtReg').html("Ingrese su contraseña");
+			     		$('#popReg' ).popup('open');
+			     		return false;
+			         };
+			         if (document.forms["reg"]["dui"].value == "") {
+			     		$('#txtReg').html("Ingrese su DUI");
+			     		$('#popReg' ).popup('open');
+			     		return false;
+			         };
+			         if (document.forms["reg"]["telefono"].value == "") {
+			     		$('#txtReg').html("Ingrese su telefono");
+			     		$('#popReg' ).popup('open');
+			     		return false;
+			         };
+			         return true;
+			    }
+				function regCorreo(){
+					var campo = document.forms['reg']['correo'].value;
+					var atpos = campo.indexOf("@");
+					var dotpos = campo.lastIndexOf(".");
+					if (atpos< 1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+					    $('#txtReg').html("Correo mal escrito");
+					    $('#popReg' ).popup('open');
+					    return false;
+					}
+				}
+
+				function regDUI(){
+					if (document.forms['reg']['dui'].value.match(/(^\d{8})-(\d$)/)){
+					    
+					}
+					else{
+						alert("Formato de DUI incorrecto \n Formato: 12345678-9");
+						return false;
+					}
+				}
+
+        	</script>
+        	<div data-role="popup" id="popReg" data-overlay-theme="a">
+		         <div id="txtReg" class="txtPop" style="color= black"></div>
+		 	</div>
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<div data-role="page" id="bienvenido">
+
+
+	<div data-role="content" >
+		<p>
+		<center><img src="Imagenes/Meson.png" width="250" height="75"></center>
+			<center><h2 style="font-family:Andalus;">Restaurante meson de goya te da la bienvenida</h2>
+			<h3 style="font-family:Andalus;">Ahora puedes hacer tus reservaciones desde tu dispositivo movil  </h3> </center>
+         <p>
+         	<center><a href="#principal" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Aceptar</a></center>
+         </p>
+		</p>
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+ 
+<div data-role="page" id="principal" data-theme="a" >
+    <script type="text/javascript">
+    	$('#principal').bind('pageshow', function() {
+    	 	if (localStorage.getItem('usuario') == null) {
+    	 		$('#txtPrin').html("Inicia sesión para continuar");
+				$('#popPrin' ).popup('open');
+				$.mobile.changePage( "#login" , { role: "page" } );
+			};
+    	});
+
+    </script>
+	<div data-role="header">
+		<a href="../index.html" rel="external" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true" style="margin-top:3px;"></a>
+	<div class="ui-icon-nodisc" align="right"><!-- Class added to the wrapper -->
+    <a href="#popuplogin" data-rel="popup" data-position-to="window" data-transition="pop" data-role="button"  data-icon="user" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+	</div><!-- /header -->
+
+	<div data-role="content">
+		<div data-role="popup" id="popPrin" data-overlay-theme="a">
+		         <div id="txtPrin" class="txtPop" style="color= black"></div>
+		 	</div>
+		<p>
+		<center><img src="Imagenes/Meson.png" width="250" height="75"></center>
+		<br><br><br>
+ 	
+            <center>
+			<style type="text/css">
+			@font-face{
+		    	font-family:'Roboto';
+		    	src: url("fonts/Roboto-Regular-webfont.ttf") format("truetype");
+		    }
+				nav{
+				  float: none; 
+				  clear: both;
+				}
+			body{
+				font-family: 'Roboto';
+			}
+				nav ul {
+				  list-style: none;
+				  margin: 0px;
+				  padding: 0px;
+				}
+
+				nav li{
+				  float: none; 
+				  width: 100%;
+				  background: white;
+				  border-style: solid;
+				  border-width: thin;
+				  border-top: none;
+				  border-left: none;
+				  border-right: none;	
+				  border-color: #998D8D;
+				}
+
+				nav li a{
+				  display: block; 
+				  width: 100%; 
+				  padding: 4px; 
+				  border-left: 5px solid; 
+				  position: relative; 
+				  text-align: left;
+				  font-size: 16px;
+				  z-index: 2;
+				  text-decoration: none;
+				  color: #444;
+				  box-sizing: border-box;  
+				  -moz-box-sizing: border-box;  
+				  -webkit-box-sizing: border-box; 
+				  font-family: 'Roboto';
+				}
+
+				nav li a img{
+					margin-right: 10px;
+				}
+					
+				nav li a:hover{ border-bottom: 0px; color: #fff;}
+				/*nav li:first-child a{ border-left: 10px solid #3498db; }*/
+				nav li:nth-child(1) a{ border-left: 10px solid #ffd071; }
+				nav li:nth-child(2) a{ border-left: 10px solid #f0776c; }
+				nav li:last-child a{ border-left: 10px solid #1abc9c; }
+
+				nav li a:after { 
+				  content: "";
+				  height: 100%; 
+				  left: 0; 
+				  top: 0; 
+				  width: 0px;  
+				  position: absolute; 
+				  transition: all 0.3s ease 0s; 
+				  -webkit-transition: all 0.3s ease 0s; 
+				  z-index: -1;
+				}
+
+				nav li a:hover:after{ width: 100%; }
+				/*nav li:first-child a:after{ background: #3498db; }*/
+				nav li:nth-child(1) a:after{ background: #ffd071; }
+				nav li:nth-child(2) a:after{ background: #f0776c; }
+				nav li:last-child a:after{ background: #1abc9c; }
+
+				nav div{
+					background: rgb(217, 63, 63);
+					padding: 20px 0px 20px 0px;
+					color: white;
+				}
+			</style>
+			<nav>
+                        <div><center>Opciones</center></div>
+				  <ul>
+				    <li><a href="#reservacion" style="color: #444;"><img src="Imagenes/pluss.jpg" alt="Reservacion" class="ui-li-icon ui-corner-none">Hacer una reserva</a></li>
+				    <li><a href="#categoria" style="color: #444;"><img src="Imagenes/platillos.png" alt="Platillos" class="ui-li-icon ui-corner-none">Platillos</a></li>
+				    <li><a href="#meventos" style="color: #444;"><img src="Imagenes/reservar.png" alt="Reservacion" class="ui-li-icon ui-corner-none">Mis eventos</a></li>
+				  </ul>
+				</nav>
+	           
+	        </center>
+		</p>
+		</div><!-- /content -->
+         
+		<div data-role="popup" id="popuplogin" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:250px; padding-bottom:2em;">
+		    <form>
+		        <div style="padding:10px 20px;">
+		            <center><img src="Imagenes/exit.jpg" width="100" height="100"></center>
+		            <hr>
+		            <a href="JavaScript:logout();" data-role="button"  data-theme="a" data-icon="back">Cerrar Sesion</a>
+		        </div>
+		    </form>
+       </div>
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+<!--Registro de Clientes -->
+<div data-role="page" id="categoria" data-theme="a">
+   
+	<div data-role="header" data-theme="a" style="padding-top:0px;">
+ 			<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+		        <a href="#principal"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+		    </div>
+    
+    </div><!-- /header -->
+
+<script type="text/javascript">
+   
+   		$.getJSON("http://localhost/php/categorias.php", mostrar);
+			$('#res li').remove();
+    			datos[i] = mostrar.items;
+
+         	function mostrar(datos){
+         		var count = datos.length
+         		html = '<li data-role="list-divider"><div id="letra"> <center><h3>Categorias</h3></center></div> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li ><a href="#platillos" onclick="sessionStorage.CodC='+datos[i].id_servicio+'" >';
+				html += '<h2>'+ datos[i].servicio +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#res').html(html);
+			$('#res').trigger('create');
+    		$('#res').listview('refresh');
+		}
+	
+</script> 
+
+    
+
+	<div data-role="content" data-theme="a" style="border:none;">
+		    <center>
+		    <div class="lis">
+		    <ul data-role="listview"  data-input="#filterBasic-inpu" id="res" data-theme="a" class="ui-btn-active">
+		    	
+			</ul>
+	         </div>
+	         </center>
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<!--Platillos -->
+<div data-role="page" id="platillos" data-theme="a">
+
+<script type="text/javascript">
+
+     $("#platillos").on("pageshow", function(){        
+
+           var cate = sessionStorage.CodC;  
+    		$.getJSON("http://localhost/php/elista.php",{idC:cate}, mostrar);
+			$('#re li').remove();
+    			datos[i] = mostrar.items;
+
+         	function mostrar(datos){
+         		var count = datos.length
+         		html = '<li data-role="list-divider"> <div id="letra"><center><h3>Seleccionar Platillo</h3></center></div> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li ><a href="#detalle" onclick="sessionStorage.idP='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen+'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#re').html(html);
+			$('#re').trigger('create');
+    		$('#re').listview('refresh');
+		}
+		
+     });
+
+	
+       
+
+	</script>
+	<div data-role="header" data-theme="a">
+			<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+    <a href="#categoria"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true"></a>
+    </div>
+
+	</div><!-- /header -->
+      
+	<div data-role="content" data-theme="a" style="border:none;">
+	    <center>
+		    <div style="width:95%; border-radius:10%;">
+			    <ul data-role="listview" data-filter="true" data-input="#filterBasic-put" id="re" data-theme="a" >
+			    	
+				</ul>
+			</div>
+		</center>
+	</div><!-- /content -->
+
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+<div data-role="page" id="detalle" data-theme="a">
+	<div data-role="header">
+		<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+        <a href="#platillos"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+	</div><!-- /header -->
+<script type="text/javascript">
+     
+    $("#detalle").on("pageshow", function(){ 
+     
+        var cod = sessionStorage.idP;
+       $.getJSON("http://localhost/php/codigolista.php?id="+cod+"", mostrarDatos)
+
+       function mostrarDatos(datos){
+         		var count = datos.length
+			for (var i = 0;i < count; i++) {
+				html ='<h2 id="le">'+datos[i].platillo+'</h2>';
+				html +='<div id="im">'
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" style="width:98%; height:250px; border-radius: 10%; "  alt=""></div>';
+				html +='<h4 >'+datos[i].descripcion+'</h4>';
+			};
+
+			$("#e").html(html);
+			
+		}
+       
+    });
+ 
+</script> 
+
+
+	<div data-role="content">
+		<p>
+		<center>
+		<style type="text/css">
+             #im{
+             	border-style: groove;
+             	border-radius: 10%;
+             	width: 98%;
+
+             }
+             #le{
+             	    border-radius: 10px:;
+                 	font-family: Pristina;
+                 	font-size: 25px;
+
+             }
+		</style>
+			<div id="e">
+				
+			</div>
+			<br>
+			<br>
+			<br>
+			<br>
+		<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+		</div>
+		</center>
+		</p>
+	</div><!-- /content -->
+</div><!-- /page -->
+
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- /Recervaciones -->
+<div data-role="page" id="reservacion"  data-theme="a">
+
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+			$("#btnPaso1").click(function(){
+				if (validarEvento() == true) {
+                 sessionStorage.setItem("opcion", $("#select-native-3").val());
+				$.getJSON("http://localhost/php/evento.php",
+					{tipo:$("#select-native-3").val(),
+					fecha:$("#fecha").val(),
+					hora:$("#hora").val(),
+					canti:$("#cant").val(),
+					mail:localStorage.getItem('usuario')},
+					rept);		
+
+
+
+				    $("#select-native-3").val('');
+				    $("#lugar").val('');
+					$("#fecha").val('');
+					$("#hora").val('');
+					$("#cant").val('1');
+				};
+		   });
+	});
+
+	function rept(datos){
+		 
+		
+	        sessionStorage.setItem("codigo", datos.codd);
+
+		     $.mobile.changePage( "#paso2" , { role: "page" } );
+	}
+	</script>
+	<div data-role="header" style="overflow:hidden; " data-theme="a">
+		<a href="#principal" rel="external" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true" style="margin-top:11px;"></a>
+    <center><br><span style="font-family:Andalus;  box-shadow:10%; font-size:22px;">Reservaciones</span></center><br>
+		    <div data-role="navbar" >
+		        <ul >
+		            <li><a data-role="button" data-icon="gear"  title="En Proceso" >Paso 1</a></li>
+		            <li ><a data-role="button" data-icon="delete" title="En Espera" class="ui-btn-active" data-theme="a" >Paso 2</a></li>
+		            <li><a data-role="button" data-icon="delete" title="En Espera"  class="ui-btn-active" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+    <style type="text/css">
+     #fr{
+
+        background-color:#BDBDBD;
+     	border-style: groove;
+     	border-radius: 5%;
+
+     }
+     .form-group{
+     	width: 80%;
+     }
+    </style>
+
+	<div data-role="content" style="border:none;">
+		<p>
+				<center><h2 style="font-family:Andalus;">Datos de la Reservacion</h2></center>
+	<div id="fr">
+
+		<form data-role="form" name="evento">
+		<center>
+			<div data-role="fieldcontain"  class="form-group" >
+			    <select name="select-native-3" id="select-native-3" data-iconpos="left" data-theme="a" >
+                   <option value="Desayuno">Desayuno</option>
+                   <option value="Almuerzo">Almuerzo</option>
+                   <option value="Cena">Cena</option>
+			    </select>
+			</div>
+			
+			<div class="form-group">
+				
+				<input type="date" id="fecha" name="fecha" placeholder="Fecha" data-theme="a" readonly>
+		    </div>
+			<div class="form-group">
+				<input type="text" id="hora" name="hora" value="08:00" placeholder="Hora" class="form-control" data-theme="a" readonly>
+		    </div>
+		    <div class="form-group">
+		    	<label style="color: 2A2A2A;">Cantidad de personas</label>
+				<input type="text" data-role="spinbox" name="cant" id="cant" value="1" min="1" max="100" readonly />
+			</div>
+			<div id="txtHora class="txtPop""></div>
+		    <center>
+		    <p>
+			    <input type="reset" data-role="button" data-mini="true" data-inline="true" value="Limpiar">
+			    <input type="button" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="btnPaso1" name="btnPaso1">
+			</p>
+			</center>
+	    </center>	    
+        </form>
+          </div>    
+          <script type="text/javascript">
+          		function validarEvento(){
+			     	if (document.forms["evento"]["fecha"].value == "") {
+			     		$('#txtEvento').html("Seleccione la fecha");
+			     		$('#popEvento' ).popup('open');
+			     		return false;
+			     	};
+			     	if (document.forms["evento"]["hora"].value == "") {
+			     		$('#txtEvento').html("Seleccione la hora");
+			     		$('#popEvento' ).popup('open');
+			     		return false;
+			     	};
+			     	if (document.forms["evento"]["cant"].value == "") {
+			     		$('#txtEvento').html("Seleccione las personas");
+			     		$('#popEvento' ).popup('open');
+			     		return false;
+			     	};
+			     	if (document.forms["evento"]["select-native-3"].value=="Desayuno") {
+			     		if (document.forms["evento"]["hora"].value >"11:00") {
+			     			$('#txtEvento').html("El horario de desayunos es de 08:00 a 11:00");
+			     			$('#popEvento' ).popup('open');
+			     			return false;
+			     		};
+			     	};
+			     	if (document.forms["evento"]["select-native-3"].value=="Almuerzo") {
+			     		if (document.forms["evento"]["hora"].value <"12:00" || document.forms["evento"]["hora"].value > "15:00") {
+			     			$('#txtEvento').html("El horario de almuerzo es de 12:00 a 15:00");
+			     			$('#popEvento' ).popup('open');
+			     			return false;
+			     		};
+			     	};
+			     	if (document.forms["evento"]["select-native-3"].value=="Cena") {
+			     		if (document.forms["evento"]["hora"].value <"16:00") {
+			     			$('#txtEvento').html("El horario de cena es de 16:00 en adelante");
+			     			$('#popEvento' ).popup('open');
+			     			return false;
+			     		};
+			     	};
+			         return true;
+			    }
+          </script>
+          <div data-role="popup" id="popEvento" data-overlay-theme="a" width="200px" style="background:white;">
+		         <div id="txtEven class="txtPop"to" style="color= white"></div>
+		 	</div>
+		</p>
+	</div><!-- /content -->
+
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- /paso 2 -->
+<div data-role="page" id="paso2" >
+
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Creando Mi Evento</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" title="En Proceso" data-theme="a">Paso 1</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="gear" class="ui-btn-active" data-theme="a">Paso 2</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="delete" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+	<div data-role="content"  >
+		 <center>
+         <script type="text/javascript">
+         $("#paso2").on("pageshow", function(){ 
+         var op = sessionStorage.getItem("opcion");
+
+        
+        if (op=="Desayuno") {
+            var  idpl= 1 ; 
+             $.getJSON("http://localhost/php/elista.php",{idC:idpl}, mostrar);
+			$('#rep li').remove();
+    			datos[i] = mostrar.items;
+                 
+         	function mostrar(datos){
+         		
+         		var count = datos.length
+         html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#pla').html(html);
+			$('#pla').trigger('create');
+    		$('#pla').listview('refresh');
+		}
+		
+         }
+
+
+         if(op=="Almuerzo"){
+            html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Una Opcion</h2></center></div><hr> ';
+            html += '<li ><a href="#cartaalmuerzo" onclick="sessionStorage.almuerzo=2">CARTA</a></li> ';
+           html += '<li ><a href="#buffet"   onclick="sessionStorage.buffet=3"> BUFFET</a></li> ';
+           html +='</li>';
+
+           $('#pla').html(html);
+		    $('#pla').trigger('create');
+    		$('#pla').listview('refresh');
+           
+         }
+
+
+
+         if(op=="Cena"){
+              var  idpl= 2 ; 
+             $.getJSON("http://localhost/php/elista.php",{idC:idpl}, mostrar);
+			$('#rep li').remove();
+    			datos[i] = mostrar.items;
+                 
+         	function mostrar(datos){
+         		
+         		var count = datos.length
+         html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#pla').html(html);
+			$('#pla').trigger('create');
+    		$('#pla').listview('refresh');
+		}
+
+         }
+
+         });
+         </script>
+		</center>
+				<ul data-role="listview" data-filter="true"  data-input="#filterBasic-i" id="pla" data-theme="a" 
+					    data-inset="true">
+					    	
+			</ul>
+
+	</div><!-- /content -->
+
+			<div data-role="popup" id="cantpopup" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:250px; padding-bottom:2em;">
+		    
+		        <div  data-theme="a" >
+			        <form name="platillos">
+			            
+			            <center><label >Cuantos platillos desea ordenar</label></center>
+			            
+			            <hr>
+			            <br>
+			            <div class="form-group" >
+						    <input type="text" data-role="spinbox" name="cantidad" id="cantidad" value="1" min="1" max="100" />
+					    </div>
+					    <center>
+				       <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="cantidad_Platillos" name="cantidad_Platillos" >
+
+
+				             <a href="#paso2" data-rel="back" data-theme="a" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini" >Cancelar</a>
+			             </center>
+			        </form>
+		        </div>
+		    
+       </div>
+	<script type="text/javascript">
+           $(document).ready(function(){
+				$("#cantidad_Platillos").click(function(){
+					$.getJSON("http://localhost/php/orden.php",
+						{ idreservacion:sessionStorage.getItem("codigo"), 
+                          idplatillo:sessionStorage.idPla,
+						cantidad:$("#cantidad").val()},
+						DatosPlat);
+					});
+				});
+           
+			    function DatosPlat(datos){
+                  $.mobile.changePage( "#confirmacion" , { role: "page" } );
+			    }
+           
+	</script>
+
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div data-role="page" id="cartaalmuerzo" >
+
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Reservaciones</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" title="En Proceso" data-theme="a">Paso 1</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="gear" class="ui-btn-active" data-theme="a">Paso 2</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="delete" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+	<div data-role="content">
+		  <ul data-role="listview" data-filter="true"  data-input="#filterBasic-i"  data-theme="a" 
+					    data-inset="true">
+				<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> 
+				   <li><a href="#platilloscarta" onclick="sessionStorage.carta=2">Platillos</a></li>
+				     <li><a href="#platilloscarta" onclick="sessionStorage.carta=4">Bebidas</a></li>
+				      <li><a href="#platilloscarta" onclick="sessionStorage.carta=5">Postres</a></li>
+				</li>	
+					    	
+			</ul>
+
+	</div><!-- /content -->
+
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+<div data-role="page" id="buffet" >
+
+<script type="text/javascript">
+
+     $("#buffet").on("pageshow", function(){        
+            
+           var buffet = sessionStorage.buffet;  
+          
+           
+    	$.getJSON("http://localhost/php/elista.php",{idC:buffet}, mostrar);
+			$('#rep li').remove();
+    			datos[i] = mostrar.items;
+                 
+         	function mostrar(datos){
+         		
+         		var count = datos.length
+         html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li><a href="#cantpopupbuffet" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#bufet').html(html);
+			$('#bufet').trigger('create');
+    		$('#bufet').listview('refresh');
+    	}
+		
+     });
+
+	
+       
+
+	</script>
+
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Creando Mi Evento</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" title="En Proceso" data-theme="a">Paso 1</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="gear" class="ui-btn-active" data-theme="a">Paso 2</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="delete" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+	<div data-role="content">
+	
+	<ul data-role="listview" data-filter="true"  data-input="#filterBasic-i" id="bufet" data-theme="a" 
+					    data-inset="true">
+					    	
+			</ul>
+
+	</div><!-- /content -->
+
+			<div data-role="popup" id="cantpopupbuffet" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:250px; padding-bottom:2em;">
+		    
+		        <div  data-theme="a" >
+			        <form name="platillos">
+			            
+			            <center><label >Cuantos platillos desea ordenar</label></center>
+			            
+			            <hr>
+			            <br>
+			            <div class="form-group" >
+						    <input type="text" data-role="spinbox" name="cantidad" id="cantidad" value="1" min="1" max="100" />
+					    </div>
+					    <center>
+				       <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="cantidad_Platillosbuffet" name="cantidad_Platillosbuffet" >
+
+
+				             <a href="#paso2" data-rel="back" data-theme="a" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini" >Cancelar</a>
+			             </center>
+			        </form>
+		        </div>
+		    
+       </div>
+	<script type="text/javascript">
+           $(document).ready(function(){
+				$("#cantidad_Platillosbuffet").click(function(){
+					$.getJSON("http://localhost/php/orden.php",
+						{ idreservacion:sessionStorage.getItem("codigo"), 
+                          idplatillo:sessionStorage.idPla,
+						cantidad:$("#cantidad").val()},
+						DatosPlat);
+					});
+				});
+           
+			    function DatosPlat(datos){
+                  $.mobile.changePage( "#confirmacion" , { role: "page" } );
+			    }
+           
+	</script>
+
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div data-role="page" id="platilloscarta" >
+
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Creando Mi Evento</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" title="En Proceso" data-theme="a">Paso 1</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="gear" class="ui-btn-active" data-theme="a">Paso 2</a></li>
+		            <li><a data-role="button" title="En Espera" data-icon="delete" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+	<div data-role="content"  >
+		 <center>
+         <script type="text/javascript">
+         $("#platilloscarta").on("pageshow", function(){ 
+         var comida = sessionStorage.carta;
+
+        if (comida==2) {
+            var  idcomi= 2 ; 
+             $.getJSON("http://localhost/php/elista.php",{idC:idcomi}, mostrarcarta);
+			$('#rep li').remove();
+    			datos[i] = mostrar.items;
+                 
+         	function mostrarcarta(datos){
+         		
+         		var count = datos.length
+         html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#almu').html(html);
+			$('#almu').trigger('create');
+    		$('#almu').listview('refresh');
+		}
+		
+         }
+
+          if (comida==4) {
+            var  bebida= 4 ; 
+             $.getJSON("http://localhost/php/elista.php",{idC:bebida}, bebidass);
+			$('#rep li').remove();
+    			datos[i] = mostrar.items;
+                 
+         	function bebidass(datos){
+         		
+         		var count = datos.length
+         html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#almu').html(html);
+			$('#almu').trigger('create');
+    		$('#almu').listview('refresh');
+		}
+		
+         }
+
+
+
+
+
+          if (comida==5) {
+            var  postre= 5; 
+             $.getJSON("http://localhost/php/elista.php",{idC:postre}, postress);
+			$('#rep li').remove();
+    			datos[i] = mostrar.items;
+                 
+         	function postress(datos){
+         		
+         		var count = datos.length
+         html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#almu').html(html);
+			$('#almu').trigger('create');
+    		$('#almu').listview('refresh');
+		}
+		
+         }
+     
+
+       
+         
+
+         });
+         </script>
+		</center>
+				<ul data-role="listview" data-filter="true"  data-input="#filterBasic-i" id="almu" data-theme="a" 
+					    data-inset="true">
+					    	
+			</ul>
+
+	</div><!-- /content -->
+
+			<div data-role="popup" id="cantpopupcarta" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:250px; padding-bottom:2em;">
+		    
+		        <div  data-theme="a" >
+			        <form name="platillos">
+			            
+			            <center><label >Cuantos platillos desea ordenar</label></center>
+			            
+			            <hr>
+			            <br>
+			            <div class="form-group" >
+						    <input type="text" data-role="spinbox" name="cantidad" id="cantidad" value="1" min="1" max="100" />
+					    </div>
+					    <center>
+				       <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="cantidad_Platilloscarta" name="cantidad_Platilloscarta" >
+
+
+				             <a href="#paso2" data-rel="back" data-theme="a" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini" >Cancelar</a>
+			             </center>
+			        </form>
+		        </div>
+		    
+       </div>
+	<script type="text/javascript">
+           $(document).ready(function(){
+				$("#cantidad_Platilloscarta").click(function(){
+					$.getJSON("http://localhost/php/orden.php",
+						{ idreservacion:sessionStorage.getItem("codigo"), 
+                          idplatillo:sessionStorage.idPla,
+						cantidad:$("#cantidad").val()},
+						DatosPlatalm);
+					});
+				});
+           
+			    function DatosPlatalm(datos){
+                  $.mobile.changePage( "#confirmacionalmuerzo" , { role: "page" } );
+			    }
+           
+	</script>
+
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div data-role="page" id="confirmacion">
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Reservaciones</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" data-theme="a" title="Completado">Completado</a></li>
+		            <li><a data-role="button" data-icon="gear" class="ui-btn-active" title="En Proceso" data-theme="a">Paso 2</a></li>
+		            <li><a data-role="button" data-icon="delete" title="En Espera" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+
+	<div data-role="content" style="border:none;">
+	<br>
+	<br>
+		<center><div id="fr"><p>
+		   <h2 style="font-family:Andalus; padding:5%;">¿Desea ordenar algo mas?</h2>
+		</p>
+		   <p>
+		    <a href="#paso2" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-l" data-theme="a">Agregar</a>
+		       
+			 <a href="#paso3" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Finalizar</a>
+			    
+			</p>
+		 </div></center>		
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+
+
+<div data-role="page" id="confirmacionbuffet">
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Reservaciones</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" data-theme="a" title="Completado">Completado</a></li>
+		            <li><a data-role="button" data-icon="gear" class="ui-btn-active" title="En Proceso" data-theme="a">Paso 2</a></li>
+		            <li><a data-role="button" data-icon="delete" title="En Espera" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+
+	<div data-role="content" style="border:none;">
+	<br>
+	<br>
+		<center><div id="fr"><p>
+		   <h2 style="font-family:Andalus; padding:5%;">¿Desea ordenar algo mas?</h2>
+		</p>
+		   <p>
+		    <a href="#buffet" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-l" data-theme="a">Agregar</a>
+		       
+			 <a href="#paso3" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Finalizar</a>
+			    
+			</p>
+		 </div></center>		
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<div data-role="page" id="confirmacionalmuerzo">
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Reservaciones</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" data-theme="a" title="Completado">Completado</a></li>
+		            <li><a data-role="button" data-icon="gear" class="ui-btn-active" title="En Proceso" data-theme="a">Paso 2</a></li>
+		            <li><a data-role="button" data-icon="delete" title="En Espera" data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+
+	<div data-role="content" style="border:none;">
+	<br>
+	<br>
+		<center><div id="fr"><p>
+		   <h2 style="font-family:Andalus; padding:5%;">¿Desea ordenar algo mas?</h2>
+		</p>
+		   <p>
+		    <a href="#cartaalmuerzo" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-l" data-theme="a">Agregar</a>
+		       
+			 <a href="#paso3" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Finalizar</a>
+			    
+			</p>
+		 </div></center>		
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div data-role="page" id="paso3" data-theme="a">
+
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    <center><h2 style="font-family:Andalus;">Creando Mi Evento</h2></center>
+		    <div data-role="navbar" >
+		        <ul>
+		            <li><a  data-icon="check" title="Completado" data-theme="a">Completado</a></li>
+		            <li><a data-role="button" data-icon="check" title="Completado" data-theme="a">Completado</a></li>
+		            <li><a data-role="button" data-icon="gear" title="En proceeso" class="ui-btn-active"  data-theme="a">Paso 3</a></li>
+		        </ul>
+		    </div><!-- /navbar -->
+    </div><!-- /header -->
+
+	<div data-role="content">
+		<p>
+		<center><img src="Imagenes/Meson.png" width="250" height="75"></center>
+			<center><h2 style="font-family:Andalus;">Gracias Por Preferirnos</h2>
+			<h3 style="font-family:Andalus;">Un empleado se comunicará con usted, para confirmar su solicitud.  </h3> </center>
+         <p>
+         	<center><a href="#principal" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Aceptar</a></center>
+         </p>
+		</p>
+	</div><!-- /content -->
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+<div data-role="page" id="meventos">
+
+
+<script type="text/javascript">
+	     $("#meventos").on("pageshow", function(){        
+
+            
+    		$.getJSON("http://localhost/php/meventos.php",{mail:localStorage.getItem("usuario")}, mostrarev);
+			$('#lit li').remove();
+    			datos[i] = mostrarev.items;
+                 
+         	function mostrarev(datos){
+         		
+         		var count = datos.length
+         		if (count < 1) {
+         			html = '<li data-role="list-divider"> <div id="letra"><center><h2>Usted no tiene eventos a&uacute;n</h2></center></div> ';
+         		}else{
+         			html = '<li data-role="list-divider"> <div id="letra"><center><h2>Mis Eventos</h2></center></div> ';
+         		}
+         
+			for (var i = 0;i < count; i++) {
+				html +='<li><a href="#detalleevento" onclick="sessionStorage.idE='+datos[i].id_reservacion+';">'
+				html += '<h2>'+ datos[i].tipo +'</h2>';
+				//html += '<p><strong>'+ datos[i].tipo +'</strong></p>';
+				html += '<p> Reservado para : '+ datos[i].cantidad_personas +' personas</p>';
+				html +='<p class="ui-li-aside"><strong>'+ datos[i].fecha +'&nbsp; '+datos[i].hora +'</strong></p>'
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#lit').html(html);
+			$('#lit').trigger('create');
+    		$('#lit').listview('refresh');
+		}
+		
+     });
+
+</script>
+
+	<div data-role="header" data-theme="a" style="padding-top:0px;">
+ 			<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+        <a href="#principal"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+     
+    </div><!-- /header -->
+
+	<div data-role="content" >
+		<p>
+		 <center>
+          <div class="lis">
+		    <ul data-role="listview" data-filter="true" data-input="#filter-input" data-theme="a" id="lit"  class="ui-btn-active">
+		    	
+			</ul>
+		</div>
+		</center>
+
+		</p>
+	</div><!-- /content -->
+</div><!-- /page -->
+
+
+
+<div data-role="page" id="detalleevento">
+
+
+<script type="text/javascript">
+	     $("#detalleevento").on("pageshow", function(){        
+
+           var eve = sessionStorage.idE;  
+         
+    		$.getJSON("http://localhost/php/consultaevento.php",{ideve:eve}, consultaplatillos);
+			$('#even li').remove();
+    			datos[i] = consultaplatillos.items;
+                 
+         	function consultaplatillos(datos){
+         		
+         		var count = datos.length
+            htm = '<li data-role="list-divider"><center> <div id="letra"><h2>Platillos Reservados';
+          htm += '</h2></div></center><hr>';
+			for (var i = 0;i < count; i++) {
+				htm +='<li><a  href="#modcantidad" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.Pl='+datos[i].id_platillo+'" >'
+				htm +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				htm += '<p><strong>'+ datos[i].platillo +'</strong></p>';
+				htm += '<p> Reservados '+ datos[i].cantidad +' Platillos</p>';
+                htm += '</a></li>';
+			};
+			html += '</li>';
+			$('#even').html(htm);
+			$('#even').trigger('create');
+    		$('#even').listview('refresh');
+
+    		contadorplatillo(eve);
+		}
+           
+       
+    	
+
+		
+     });
+
+			function contadorplatillo (co) {
+					$.getJSON("http://localhost/php/ContadorPlatillos.php",{idCount:sessionStorage.idE}, Contador);
+
+			               function Contador(datos){
+			         		var count = datos.length
+			               
+						$("#counta").text("Total: " +datos.cont);
+						
+					}
+			}
+
+
+
+</script>
+<style type="text/css">
+	
+	#counta{
+		border-radius: 50%;
+		background-color: white;
+		position: fixed;
+		color: black;
+		bottom: 0;
+		margin-bottom: 10px;
+		margin-right: 10px;
+		right: 0;
+	}
+</style>
+
+	<div data-role="content" >
+		<p>
+		
+		 <center>
+		           <div class="lis">
+		    <ul data-role="listview" data-filter="true" data-input="#filter-input" data-theme="a" id="even"  class="ui-btn-active">
+		    	
+			</ul>
+		</div>
+		</center>
+
+		</p>
+	</div><!-- /content -->
+
+	<div data-role="popup" id="modcantidad" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:250px; padding-bottom:2em;">
+		        <div  data-theme="a" >
+
+			        <form>
+			            
+			            <center><label >Cuantos platillos desea</label></center>
+			            
+			            <hr>
+			            <br>
+			            <div class="form-group" >
+						    <input type="text" data-role="spinbox" id="cantid" name="cantidad" min="1" value="1">
+					    </div>
+					    <center>
+				             <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="modCant" name="modCant" >
+				             <a href="#detalleevento" data-rel="back" data-theme="a" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini" >Cancelar</a>
+			             </center>
+			        </form>
+		        </div>
+		    
+       </div>
+
+       <div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+<a href="#Agregar" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Agregar Platillo</a><center><div id="counta"></div></center>
+	</div><!-- /footer -->
+
+	<script type="text/javascript">
+           $(document).ready(function(){
+				$("#modCant").click(function(){
+					$.getJSON("http://localhost/php/modCantidad.php",
+						{ idevent:sessionStorage.idE, 
+                          iplatillo:sessionStorage.Pl,
+						cantidad:$("#cantid").val()},
+						Dato);
+					});
+				});
+           
+			    function Dato(datos){
+                  $.mobile.changePage( "#meventos" , { role: "page" } );
+			    }
+           
+	</script>
+</div><!-- /page -->
+
+
+
+
+
+
+<div data-role="page" id="Agregar" >
+
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+    </div><!-- /header -->
+
+ <script type="text/javascript">
+   
+   		$.getJSON("http://localhost/php/categorias.php", mostrarCate);
+			$('#m li').remove();
+    			datos[i] = mostrarCate.items;
+
+         	function mostrarCate(datos){
+         		var count = datos.length
+         		html = '<li data-role="list-divider"> <div id="letra"><center><h3>Categoria</h3></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li ><a href="#AgregarP" onclick="sessionStorage.categ='+datos[i].id_servicio+'" >';
+				html += '<h2>'+ datos[i].servicio+'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#m').html(html);
+			$('#m').trigger('create');
+    		$('#m').listview('refresh');
+		}
+	
+</script> 
+	<div data-role="content"  >
+
+		<p >
+		<div id="buscar">
+		     <form class="ui-filterable">
+    		   <input id="filter-input" data-type="search" placeholder="Buscar " style="border-style:none;">
+		     </form>
+		 </div>
+		 <br>
+		 <center>
+          <div class="lis">
+		    <ul data-role="listview" data-filter="true" data-input="#filter-input" data-theme="a" id="m"  class="ui-btn-active">
+		    	
+			</ul>
+		</div>
+		</center>
+		</p>
+
+
+	</div><!-- /content -->
+
+
+</div><!-- /page -->
+
+
+
+<div data-role="page" id="AgregarP" data-theme="a">
+
+
+<script type="text/javascript">
+
+     $("#AgregarP").on("pageshow", function(){        
+
+           var c = sessionStorage.categ;  
+    		$.getJSON("http://localhost/php/elista.php",{idC:c}, mostrarPl);
+			$('#ret li').remove();
+    			datos[i] = mostrarPl.items;
+                 
+         	function mostrarPl(datos){
+         		
+         		var count = datos.length
+         html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
+			for (var i = 0;i < count; i++) {
+				html += '<li><a href="#AgregarPlatilloPop" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.CodPla='+datos[i].id_platillo+'" >';
+				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<h2>'+ datos[i].platillo +'</h2>';
+                html += '</a></li>';
+			};
+			html += '</li>';
+			$('#ret').html(html);
+			$('#ret').trigger('create');
+    		$('#ret').listview('refresh');
+		}
+		
+     });
+
+	
+       
+
+	</script>
+	<div data-role="header" style="overflow:hidden;" data-theme="a">
+
+    </div><!-- /header -->
+
+	<div data-role="content" >
+			<div id="buscar">
+			 <form class="ui-filterable" >
+		    				<input id="filterBasic-i" data-type="search" placeholder="Buscar">
+			</form>
+			</div>
+		    <center>
+		        <div id="l">
+					<p>
+					   
+						
+					    <ul data-role="listview" data-filter="true"  data-input="#filterBasic-i" id="ret" data-theme="a" 
+					    data-inset="true">
+					    	
+						</ul>
+					</p>	
+               </div>	
+		    </center>		
+	</div><!-- /content -->
+		<div data-role="popup" id="AgregarPlatilloPop" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:250px; padding-bottom:2em;">
+		    <form>
+		        <div  data-theme="a" >
+			        <form>
+			            
+			            <center><label >Cuantos platillos desea</label></center>
+			            
+			            <hr>
+			            <br>
+			            <div class="form-group" >
+						    <input type="text" data-role="spinbox" id="can" name="can" min="1" value="1" readonly>
+					    </div>
+					    <center>
+				             <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="A" name="A" >
+				             <a href="#" data-rel="back" data-theme="a" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini" >Cancelar</a>
+			             </center>
+			        </form>
+		        </div>
+		    </form>
+       </div>
+
+	<script type="text/javascript">
+           $(document).ready(function(){
+				$("#A").click(function(){
+					$.getJSON("http://localhost/php/orden.php",
+						{ idreservacion:sessionStorage.idE, 
+                          idplatillo:sessionStorage.CodPla,
+						  cantidad:$("#can").val()},
+						Dat);
+					});
+				});
+           
+			    function Dat(datos){
+                  $.mobile.changePage( "#meventos" , { role: "page" } );
+			    }
+           
+	</script>
+
+
+</div><!-- /page -->
+
+</body>
+</html>

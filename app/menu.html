@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Page Title</title>
+
+	<meta name="viewport" content="width=device-width" content="height=device-height" charset="UTF-8">
+<link rel="stylesheet" href="css/mdg.min.css" />
+<link rel="stylesheet" type="text/css" href="css/mobipick.css">
+		<link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
+		<link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery.mobile-1.4.0-rc.1.js"></script>
+<script type="text/javascript" src="js/xdate.js"></script>
+<script type="text/javascript" src="js/mobipick.js"></script>
+<script type="text/javascript" src="js/jqm-spinbox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.timepicker.min.css">
+<script type="text/javascript" src="js/jquery.timepicker.min.js"></script>
+<script type="text/javascript">
+	$( document ).on( "pagecreate", "#reservacion", function() {
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	if(dd<10) {
+	    dd='0'+dd
+	} 
+	if(mm<10) {
+	    mm='0'+mm
+	} 
+	today = yyyy+'-'+mm+'-'+dd;	
+	document.getElementById("fecha").setAttribute("min", today);
+    var picker = $( "input[type='date']", this );
+    $('#hora').timepicker({
+    	 timeFormat: 'HH:mm',
+    	 minTime: '08:00:00',
+    	 maxTime: '21:00:00',
+    	 interval: 30
+    });
+    picker.mobipick({
+    	locale: "ES"
+    });
+});
+	function logout(){
+		localStorage.clear();
+		sessionStorage.clear();
+		$.mobile.changePage( "#login" , { role: "page" } );
+	}
+	$( "document" ).ready(function(){
+		if (sessionStorage.getItem('usuario') == null) {
+			$.mobile.changePage( "#login" , { role: "page" } );
+		};
+		if (sessionStorage.getItem('usuario') != null) {
+			$.mobile.changePage( "#principal" , { role: "page "});
+		};
+	});
+</script>
+</head>
+
+<style type="text/css">
+	
+	#cajas{
+
+		width: 100%;
+
+
+	}
+
+	#logg{
+        
+		font-family: Andalus;
+		font-size: 20px;
+		color: blue;
+
+	}
+	.lis{
+		padding: 2px;
+		width: 95%;
+		border-radius: 12%;
+	}
+	#buscarc{
+       border: none;
+       margin-bottom: 10px;
+		margin-left: 60%;
+		padding-bottom: 2px;
+	}
+	.text{
+		color: white;
+		padding: 3px;
+	}
+
+	.popup{
+		background: #333846;
+		width: 200px;
+		height: 20%;
+		box-shadow: 5px 5px 20px black;
+		text-align: center;
+	}
+</style>
+<body >
+
+
+
+<div data-role="page" id="principal" data-theme="a" >
+    
+	<div data-role="header">
+	<div class="ui-icon-nodisc" align="right"><!-- Class added to the wrapper -->
+    <a href="#popuplogin" data-rel="popup" data-position-to="window" data-transition="pop" data-role="button"  data-icon="user" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+	</div><!-- /header -->
+
+	<div data-role="content">
+		<p>
+		<center><img src="Imagenes/Meson.png" width="250" height="75"></center>
+		<br><br><br>
+ 
+            <center>
+			<style type="text/css">
+			@font-face{
+		    	font-family:'Roboto';
+		    	src: url("fonts/Roboto-Regular-webfont.ttf") format("truetype");
+		    }
+				nav{
+				  float: none; 
+				  clear: both;
+				}
+			body{
+				font-family: 'Roboto';
+			}
+				nav ul {
+				  list-style: none;
+				  margin: 0px;
+				  padding: 0px;
+				}
+
+				nav li{
+				  float: none; 
+				  width: 100%;
+				  background: white;
+				  border-style: solid;
+				  border-width: thin;
+				  border-top: none;
+				  border-left: none;
+				  border-right: none;	
+				  border-color: #998D8D;
+				}
+
+				nav li a{
+				  display: block; 
+				  width: 100%; 
+				  padding: 4px; 
+				  border-left: 5px solid; 
+				  position: relative; 
+				  text-align: left;
+				  font-size: 16px;
+				  z-index: 2;
+				  text-decoration: none;
+				  color: #444;
+				  box-sizing: border-box;  
+				  -moz-box-sizing: border-box;  
+				  -webkit-box-sizing: border-box; 
+				  font-family: 'Roboto';
+				}
+
+				nav li a img{
+					margin-right: 10px;
+				}
+					
+				nav li a:hover{ border-bottom: 0px; color: #fff;}
+				/*nav li:first-child a{ border-left: 10px solid #3498db; }*/
+				nav li:nth-child(1) a{ border-left: 10px solid #ffd071; }
+				nav li:nth-child(2) a{ border-left: 10px solid #f0776c; }
+				nav li:last-child a{ border-left: 10px solid #1abc9c; }
+
+				nav li a:after { 
+				  content: "";
+				  height: 100%; 
+				  left: 0; 
+				  top: 0; 
+				  width: 0px;  
+				  position: absolute; 
+				  transition: all 0.3s ease 0s; 
+				  -webkit-transition: all 0.3s ease 0s; 
+				  z-index: -1;
+				}
+
+				nav li a:hover:after{ width: 100%; }
+				/*nav li:first-child a:after{ background: #3498db; }*/
+				nav li:nth-child(1) a:after{ background: #ffd071; }
+				nav li:nth-child(2) a:after{ background: #f0776c; }
+				nav li:last-child a:after{ background: #1abc9c; }
+
+				nav div{
+					background: rgb(217, 63, 63);
+					padding: 20px 0px 20px 0px;
+					color: white;
+				}
+			</style>
+			<nav>
+                        <div><center>Opciones</center></div>
+				  <ul>
+				    <li><a href=""><img src="Imagenes/pluss.jpg" alt="Reservacion" class="ui-li-icon ui-corner-none">Hacer una reserva</a></li>
+				    <li><a href=""><img src="Imagenes/platillos.png" alt="Platillos" class="ui-li-icon ui-corner-none">Platillos</a></li>
+				    <li><a href=""><img src="Imagenes/reservar.png" alt="Reservacion" class="ui-li-icon ui-corner-none">Mis eventos</a></li>
+				  </ul>
+				</nav>
+	           
+	        </center>
+		</p>
+		</div><!-- /content -->
+         
+		<div data-role="popup" id="popuplogin" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:250px; padding-bottom:2em;">
+		    <form>
+		        <div style="padding:10px 20px;">
+		            <center><img src="Imagenes/exit.jpg" width="100" height="100"></center>
+		            <hr>
+		            <a href="JavaScript:logout();" data-role="button"  data-theme="a" data-icon="back">Cerrar Sesion</a>
+		        </div>
+		    </form>
+       </div>
+	<br>
+	<br>
+	<div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
+		<h4>Meson de Goya &copy;</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
