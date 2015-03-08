@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mesón de Goya | Contáctenos</title>
+
+    <link rel="stylesheet" type="text/css" href="css/estilo_personalizado.css">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/business-casual.css" rel="stylesheet">
+
+    <!--Progress Bar-->
+    <script type="text/javascript" src="js/progressbar.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/progress.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <div class="brand">Restaurante Mesón de Goya</div>
+    <div class="address-bar">CONTÁCTENOS</div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Contáctenos</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- navbar-brand is hidden on larger screens, but visible when the menu is collapsed -->
+                <a class="navbar-brand" href="index.html">Contáctenos</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="principal.html">Inicio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="servicios.html">Servicios</a>
+                    </li>
+                    <li>
+                        <a href="gallery.html">Galería de Eventos</a>
+                    </li>
+                    <li>
+                        <a href="promociones.html">Promociones</a>
+                    </li>
+                    <li>
+                        <a href="#">Contáctenos</a>
+                    </li>
+                    <li>
+                        <a href="app/index.html">Mi Cuenta</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <div class="container">
+        <div class="box">
+            <div class="col-lg-12">
+                <!-- JQUERY VALIDACIÓN DE FORMULARIO-->
+
+                    <hr>
+                    <h2 class="intro-text text-center"><b>Realiza tu Cotización</b></h2>
+                    <hr>
+                    
+                    <h6 id="campos" class="text-center">Campos Requeridos (*) </h6>
+                    <div id="ok">
+
+                    </div>
+                    <!--^//////////////////////////////FORMULARIO DE COTIZACION////////////////////////////////////////////////////-->
+                    <form id="frmCotizacion" method="POST">
+                        
+                          <div class="form-group">
+                            <label>Nombre: *</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                          </div>
+                          <div class="form-group">
+                            <label>Email: *</label>
+                            <input type="email" class="form-control" placeholder="correo@ejemplo.com" id="correo" name="correo">
+                          </div>
+                          <div class="form-group">
+                            <label>Teléfono: *</label>
+                            <input type="tel" class="form-control" placeholder="22222323 / 77779999" id="tel" name="tel">
+                          </div>
+                          <div class="form-group">
+                            <label>Tipo de Cotización: *</label>
+                            <select id="servicio" name="servicio"class="form-control" required>
+                              <option>Seleccione una opción</option>
+                              <option>Boda</option>
+                              <option>XV Años</option>
+                              <option>Evento Corporativo</option>
+                              <option>Baby Shower</option>
+                              <option>Cumpleaños</option>
+                              <option>Graduación</option>
+                              <option>Despedida de Soltera</option>
+                              <option>Otro</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label>Cantidad aprox. de personas: *</label>
+                            <input type="number" class="form-control" min="1" max="45" id="num" name="num">
+                          </div>
+                          <div class="form-group">
+                            <label>Fecha del Evento: *</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha">
+                          </div>
+                          <div class="form-group">
+                            <label>Duración del Evento: *</label>
+                            <input type="number" class="form-control" min="1" max="6" id="horas" name="horas">
+                          </div>
+                          <div class="form-group">
+                            <label>Comentarios Adicionales:</label>
+                            <textarea class="form-control" style="width:100%;" rows="3"></textarea>
+                          </div>
+                        <input type="submit" style="width:100%;" class="btn btn-primary" value="Enviar"/>
+                    </form>
+                    
+                    <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+                    <script type="text/javascript" src="js/jquery.validate.js"></script>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#ok").hide();
+
+                            $("#frmCotizacion").validate({
+                                rules: {
+                                    nombre: { required: true, minlength: 2},
+                                    correo: { required: true, email: true},
+                                    tel: { minlength: 2, maxlength: 8},
+                                    servicio: { required: true},
+                                    num: { minlength: 2, maxlength: 15},
+                                    fecha: { required: true},
+                                    horas: { required:true, minlength: 1}
+                                },
+                                messages: {
+                                    nombre: "Debe introducir su nombre.",
+                                    correo: "Debe ingresar su correo electrónico. ",
+                                    tel: "Debe ingresar su número de teléfono. ",
+                                    servicio: "Debe seleccionar un servicio.",
+                                    num: "Ingrese el número de personas.",
+                                    fecha: "Ingrese una fecha disponible.",
+                                    horas: "Ingrese las horas en que se llevará a cabo el evento.",
+                                },
+                                submitHandler: function(form){
+                                    var dataString = 'nombre='+$('#nombre').val()+'&correo='+$('#correo').val()+'&tel='+$('#tel').val()+'&servicio='+$('#servicio').val()+'&num='+$('#num').val()+'&fecha='+$('#fecha').val()+'&horas='+$('#horas').val();
+                                    $.ajax({
+                                        type: "POST",
+                                        url:"../php/cotizacion.php",
+                                        data: dataString,
+                                        success: function(data){
+                                            $("#ok").html(data);
+                                            $("#ok").show();
+                                            $("#frmCotizacion").hide();
+                                            $("#campos").hide();
+                                            jQuery('body,html').animate({
+                                            scrollTop: 0
+                                            }, 800);
+                                        }
+                                    });
+                                }
+                            });
+
+                            
+                        });
+                    </script>
+                </div>
+        </div>
+    </div>
+    <div class="container">
+
+        <div class="row">
+            <div class="box">
+                <div class="col-lg-12">
+                    <hr>
+                    <h2 class="intro-text text-center">Localización
+                        <strong>Mesón de Goya</strong>
+                    </h2>
+                    <hr>
+                </div>
+                <div class="col-md-8">
+                    <!-- Embedded Google Map using an iframe - to select your location find it on Google maps and paste the link as the iframe src. If you want to use the Google Maps API instead then have at it! -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.75064107509!2d-89.278711!3d13.672921000000013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f632e511fc3f9fb%3A0x400ad4efd74534bd!2sRestaurante+Mes%C3%B3n+de+Goya!5e0!3m2!1ses-419!2ssv!4v1417810721236" width="100%" height="450" frameborder="0" style="border:0"></iframe>
+                </div>
+                <div class="col-md-3">
+                    <p>Teléfono:
+                        <strong><a href="tel:+5032132-7488">2132-7488</a></strong>
+                    </p>
+                    <p>Email:
+                        <strong><a href="mailto:restaurantemesondegoya@itca.edu.sv">restaurantemesondegoya@itca.edu.sv</a></strong>
+                    </p>
+                    <p>Dirección:
+                        <strong>Km 11, carretera panamericana, Santa Tecla, La Libertad. <br> +503 Santa Tecla, El Salvador</strong>
+                    </p>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+</div>
+<div class="container">
+            <div class="box">
+                <div class="col-lg-12">
+                    <center>
+                        <hr class="Bann">
+                    <h1 class="intro-text text-center">
+                        <p id="slogan">"Al preferirnos contribuye a la formación profesional de los técnicos del ITCA y al desarrollo de El Salvador."</p>
+                    </h1>
+                    <hr class="Bann">
+
+                </div>
+            </div>
+        </div>
+<div class="box">
+                <a href="tel:+50363087029"><button type="button" class="btn btn-primary btn-lg btn-block">¡Contáctenos!</button></a>
+            </div>
+       
+    </div>
+    <!-- /.container -->
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-left">
+                    <div class="col-md-3" >
+                        <h4>Ofrecemos</h4>
+                        <hr>
+                        <ul>
+                            <li>Desayunos a la carta.</li>
+                            <li>Desayunos Buffet día Domingo de 7:00 am a 11:00 am.</li>
+                            <li>Almuerzos a la carta</li>
+                            <li>Buffet Ejecutivo de Lunes a Viernes de 12:00 pm a 2:00 pm.</li>
+                            <li>Cena a la carta</li>
+                            <li>Café y postres</li>
+                            <li>Bebidas</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Hora de Atención</h4>
+                        <hr>
+                        <ul>
+                            <li>Servicio a la Carta de Lunes - Miercoles de 7:00 a.m. - 6:00 p.m.</li>
+                            <li>Servicio a la Carta de Jueves a Sabado de 7:00 am.-10:00 p.m</li>
+                            <li>Domingo de 7:00 a.m. - 04:00 p.m.</li>
+                        </ul>    
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Información</h4>
+                        <hr>
+                        <a><div class="glyphicon glyphicon-map-marker">&nbsp;</div>Km 11, Carretera a Santa Tecla</a><br>
+                        <a><div class="glyphicon glyphicon-comment">&nbsp;</div>aplopez@itca.edu.sv</a><br>
+                        <a><div class="glyphicon glyphicon-earphone">&nbsp;</div>Tel. (503) 2132-7488, 2132-7489, 2132-7491<br>Fax. (503) 2132-7493</a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>Copyright &copy; Mesón de Goya 
+                    <script>
+                        var f = new Date();
+                        document.write(f.getFullYear());
+                    </script>
+                      </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery-2.1.0.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+     <!-- ///////////////////////BOTÓN IR ARRIBA///////////////////-->
+    <div id='IrArriba'>
+    <a href='#Arriba'><span/></a>
+    </div>
+    <script type='text/javascript'>
+    //<![CDATA[
+    // Botón para Ir Arriba
+    jQuery.noConflict();
+    jQuery(document).ready(function() {
+    jQuery("#IrArriba").hide();
+    jQuery(function () {
+    jQuery(window).scroll(function () {
+    if (jQuery(this).scrollTop() > 200) {
+    jQuery('#IrArriba').fadeIn();
+    } else {
+    jQuery('#IrArriba').fadeOut();
+    }
+    });
+    jQuery('#IrArriba a').click(function () {
+    jQuery('body,html').animate({
+    scrollTop: 0
+    }, 800);
+    return false;
+    });
+    });
+
+    });
+    //]]>
+    </script>
+</body>
+
+</html>

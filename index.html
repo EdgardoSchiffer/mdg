@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cargando ...</title>
+	<META charset="utf-8" HTTP-EQUIV="Refresh" CONTENT="3; URL=principal.html">
+</head>
+<style type="text/css">
+	@font-face{
+    	font-family:'Parisienne';
+    	src: url("fonts/Parisienne.ttf") format("truetype");
+    }
+	@keyframes typing {
+	    from { width: 100% }
+	    to { width:0 }
+	}
+
+	@keyframes blink-caret {
+	    from, to { border-color: transparent }
+	    50% { border-color: black }
+	}
+	
+	@-webkit-keyframes typing {
+	    from { width: 100% }
+	    to { width:0 }
+	}
+
+	@-webkit-keyframes blink-caret {
+	    from, to { border-color: transparent }
+	    50% { border-color: black }
+	}
+
+
+	div{
+		background: white;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 15%;
+		margin: auto;
+		border-style: groove;
+		border-radius: 1%;
+		border-color: white;
+	}
+
+	body { 
+		font-family: 'Parisienne' ; 
+		background: url('img/bgmg.jpg') no-repeat center center fixed;
+    	background-size: cover;
+	}
+
+	h1 { 
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 70%;
+		margin: auto;
+		text-align: center;
+		color: #773131;
+	}
+	#text{
+		vertical-align: middle;
+	}
+	#animacion {
+	    position:absolute;
+	    right:0;
+	    background: white; /* same as background */
+	    animation: typing 2s steps(60, end), /* # of steps = # of characters */
+	                        blink-caret 1s step-end infinite;
+	    -webkit-animation: typing 2s steps(60, end), /* # of steps = # of characters */
+	                        blink-caret 1s step-end infinite;
+	}
+</style>
+<body>
+	<div>
+		<h1><span id="text">Mesón de Goya</span><span id="animacion">&nbsp;</span></h1>
+	</div>
+</body>
+</html>

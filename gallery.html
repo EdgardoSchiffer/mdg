@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mesón de Goya | Galería</title>
+
+
+    <link rel="stylesheet" type="text/css" href="css/estilo_personalizado.css">
+
+    <!--GALERíA DE IMÁGENES-->
+   
+    <link rel="stylesheet" type="text/css" href="css/swipebox.css">
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.swipebox.js"></script>
+    <script type="text/javascript">
+        ;( function( $ ) {
+            $( '.swipebox' ).swipebox();
+        } )( jQuery );
+        </script>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/business-casual.css" rel="stylesheet">
+
+    <!--Progress Bar-->
+    <script type="text/javascript" src="js/progressbar.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/progress.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div class="brand">Restaurante Mesón de Goya</div>
+    <div class="address-bar">GALERÍA</div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Galería</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- navbar-brand is hidden on larger screens, but visible when the menu is collapsed -->
+                <a class="navbar-brand" href="index.html">GALERÍA</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="principal.html">Inicio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="servicios.html">Servicios</a>
+                    </li>
+                    <li>
+                        <a href="#">Galería de Eventos</a>
+                    </li>
+                    <li>
+                        <a href="promociones.html">Promociones</a>
+                    </li>
+                    <li>
+                        <a href="contact.html">Contáctenos</a>
+                    </li>
+                    <li>
+                        <a href="app/index.html">Mi Cuenta</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <div class="container" >
+        <div class="box">
+            <div id="gallery" class="row">
+                <center>
+                    <h1>Galería de Eventos</h1>
+                </center>
+                <center>
+                <!--MENÚ CARTA-->
+                <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+                <script type="text/javascript">
+                        $("document").ready(function(){
+                            $.getJSON('http://localhost/php/categorias.php', function(datos) {
+                                $.each(datos, function(i, campo){
+                                    if (i == 0) {
+                                        galeria(campo.id_servicio);
+                                    };
+                                    $("#res").append("<li><a onClick='galeria("+campo.id_servicio+");'>"+campo.servicio+"</a></li>");
+                                });
+                            });
+                        });
+                        function galeria(id){
+                            $.getJSON("http://localhost/php/elista.php", {idC:id}, function(datos){
+                                $("#imagenes").html("");
+                                $.each(datos, function(i, campo){
+                                    $("#imagenes").append("<div class='panel panel-default'><div class='panel-body'><a class='pull-left'><img  style='width:150px; height:120px; border: solid green 2px; border-radius: 6px;' src=http://localhost/meson/platillos/"+campo.imagen+" alt='...''></a><h4 class='list-group-item-heading' style='text-align:center;'>"+campo.platillo+"</h4><p style=' color:green; text-align:center; font-size:12px;'>"+campo.descripcion+"</p></div>");
+                                });
+                            });
+                        };
+                </script>
+                <div class="btn-group">
+                  <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" >Nuestra Carta<span class="caret"></span></a>
+                  <ul id="res"  class="dropdown-menu"></ul>
+                </div>
+
+                <!--EVENTOS-->
+                <script type="text/javascript">
+                        
+                </script>
+                <div class="btn-group">
+                  <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" >Eventos<span class="caret"></span></a>
+                  <ul id="res"  class="dropdown-menu"></ul>
+                </div>
+
+                <!--DECORACIONES-->
+
+                <script type="text/javascript">
+                        function mostrarDeco(){
+                            $.getJSON('http://localhost/php/JSON_decoraciones.php', function(datos) {
+                                $("#imagenes").html("");
+                                $.each(datos, function(i, campo){
+                                    $("#imagenes").append("<div class='panel panel-default'><div class='panel-body'><a class='pull-left'><img  style='width:150px; height:120px; border: solid green 2px; border-radius: 6px;' src=http://localhost/meson/platillos/"+campo.imagen+" alt='...''></a><h4 class='list-group-item-heading' style='text-align:center;'>"+campo.nombre+"</h4><p style=' color:green; text-align:center; font-size:12px;'>"+campo.descripcion+"</p></div>");
+                                });
+                            });
+                        } 
+                </script>
+                <div class="btn-group">
+                  <button class="btn btn-success dropdown-toggle" onclick="mostrarDeco()">Decoraciones</button>
+                </div>
+                </center>
+                
+                <style type="text/css">
+                    ul li a:hover{
+                        cursor: pointer;
+                    }
+                </style>
+                
+                <div class="col-lg-12 text-center">
+ 
+                    <hr class="Bann">
+                    <div id="imagenes">
+
+                    </div>
+                </div>
+                
+            </div>
+            <center>
+                <hr class="Bann">
+                <a href="tel:+50363087029"><button type="button" class="btn btn-primary btn-lg btn-block">¡Contáctenos!</button></a>
+            </center>
+        </div>
+    </div>
+    <div class="container">
+            <div class="box">
+                <div class="col-lg-12">
+                    <center>
+                        <hr class="Bann">
+                    <h1 class="intro-text text-center">
+                        <p id="slogan">"Al preferirnos contribuye a la formación profesional de los técnicos del ITCA y al desarrollo de El Salvador."</p>
+                    </h1>
+                    <hr class="Bann">
+
+                </div>
+            </div>
+        </div>
+
+     <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-left">
+                    <div class="col-md-3" >
+                        <h4>Ofrecemos</h4>
+                        <hr>
+                        <ul>
+                            <li>Desayunos a la carta.</li>
+                            <li>Desayunos Buffet día Domingo de 7:00 am a 11:00 am.</li>
+                            <li>Almuerzos a la carta</li>
+                            <li>Buffet Ejecutivo de Lunes a Viernes de 12:00 pm a 2:00 pm.</li>
+                            <li>Cena a la carta</li>
+                            <li>Café y postres</li>
+                            <li>Bebidas</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Hora de Atención</h4>
+                        <hr>
+                        <ul>
+                            <li>Servicio a la Carta de Lunes - Miercoles de 7:00 a.m. - 6:00 p.m.</li>
+                            <li>Servicio a la Carta de Jueves a Sabado de 7:00 am.-10:00 p.m</li>
+                            <li>Domingo de 7:00 a.m. - 04:00 p.m.</li>
+                        </ul>    
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Información</h4>
+                        <hr>
+                        <a><div class="glyphicon glyphicon-map-marker">&nbsp;</div>Km 11, Carretera a Santa Tecla</a><br>
+                        <a><div class="glyphicon glyphicon-comment">&nbsp;</div>aplopez@itca.edu.sv</a><br>
+                        <a><div class="glyphicon glyphicon-earphone">&nbsp;</div>Tel. (503) 2132-7488, 2132-7489, 2132-7491<br>Fax. (503) 2132-7493</a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>Copyright &copy; Mesón de Goya 
+                    <script>
+                        var f = new Date();
+                        document.write(f.getFullYear());
+                    </script>
+                      </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+     <!-- ///////////////////////BOTÓN IR ARRIBA///////////////////-->
+    <div id='IrArriba'>
+    <a href='#Arriba'><span/></a>
+    </div>
+    <script type='text/javascript'>
+    //<![CDATA[
+    // Botón para Ir Arriba
+    jQuery.noConflict();
+    jQuery(document).ready(function() {
+    jQuery("#IrArriba").hide();
+    jQuery(function () {
+    jQuery(window).scroll(function () {
+    if (jQuery(this).scrollTop() > 200) {
+    jQuery('#IrArriba').fadeIn();
+    } else {
+    jQuery('#IrArriba').fadeOut();
+    }
+    });
+    jQuery('#IrArriba a').click(function () {
+    jQuery('body,html').animate({
+    scrollTop: 0
+    }, 800);
+    return false;
+    });
+    });
+
+    });
+    //]]>
+    </script>
+</body>
+</html>

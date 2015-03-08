@@ -1,0 +1,29 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif:400italic);
+/* Botón Ir Arriba
+----------------------------------------------- */
+#IrArriba {
+position: fixed;
+bottom: 30px; /* Distancia desde abajo */
+right: 30px; /* Distancia desde la derecha */
+}
+
+#IrArriba span {
+width: 60px; /* Ancho del botón */
+height: 60px; /* Alto del botón */
+display: block;
+background: url('../img/flecha-arriba.png') no-repeat center center;
+}
+
+#IrArriba:hover{
+    opacity: 0.4;
+}
+
+#slogan{
+    font-family: 'Droid Serif', serif;
+    font-size: 15px;
+    font-style: italic;
+}
+
+.Bann{
+    border: 0 ; border-top: 4px double green; width: 90%;
+}
