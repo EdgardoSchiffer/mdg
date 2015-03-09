@@ -24,6 +24,6 @@ if (!empty($_GET)) {
 	$nuevousuario->execute();
     echo '{"loggerPHP" : "Datos ingresados con exito"}';
     $obj->conexion = null;
-  // }
+   }
 	
 ?>
