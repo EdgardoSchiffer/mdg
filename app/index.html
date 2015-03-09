@@ -238,17 +238,17 @@
 					{nombre:$("#nombre").val(), 
 					apellido:$("#apellido").val(), 
 					correo:$("#correo").val(),
-					pass:$("#pass").val(),
-					dui:$("#dui").val(),
-					telefono:$("#telefono").val()},
+					pass:$("#pass").val()
+					/*dui:$("#dui").val(),
+					telefono:$("#telefono").val()*/},
 					mDatos);
 
 					$("#nombre").focus(''),
 				    $("#nombre").val(''), 
 					$("#apellido").val(''), 
-					$("#pass").val(''),
-					$("#dui").val(''),
-					$("#telefono").val('');
+					$("#pass").val('');
+					/*$("#dui").val(''),
+					$("#telefono").val('');*/
 
 		   };
 		});
@@ -285,13 +285,15 @@
 					    
 			<input type="password" class="form-control" id="pass" placeholder="Contraseña" name="pass" data-theme="a">
 			</div>	
+			<!--
 		    <div class="form-group">		    
 			<input type="text" class="form-control" id="dui" placeholder="DUI" name="dui" data-theme="a" onblur="regDUI();">
 			</div>	
 		    <div class="form-group">		    
 				<input type="tel" class="form-control" id="telefono" placeholder="Telefono" name="telefono" 
 					data-theme="a">
-			</div>													    		    
+			</div>
+              -->
 		    <center>
 		    <p>
 			    <input type="reset" data-role="button" data-mini="true" data-theme="a" data-inline="true" value="Limpiar">
@@ -325,6 +327,7 @@
 			     		$('#popReg' ).popup('open');
 			     		return false;
 			         };
+			         /*
 			         if (document.forms["reg"]["dui"].value == "") {
 			     		$('#txtReg').html("Ingrese su DUI");
 			     		$('#popReg' ).popup('open');
@@ -334,7 +337,7 @@
 			     		$('#txtReg').html("Ingrese su telefono");
 			     		$('#popReg' ).popup('open');
 			     		return false;
-			         };
+			         };*/
 			         return true;
 			    }
 				function regCorreo(){
@@ -347,7 +350,7 @@
 					    return false;
 					}
 				}
-
+                /*
 				function regDUI(){
 					if (document.forms['reg']['dui'].value.match(/(^\d{8})-(\d$)/)){
 					    
@@ -356,7 +359,7 @@
 						alert("Formato de DUI incorrecto \n Formato: 12345678-9");
 						return false;
 					}
-				}
+				}*/
 
         	</script>
         	<div data-role="popup" id="popReg" data-overlay-theme="a">
@@ -597,6 +600,7 @@
      $("#platillos").on("pageshow", function(){        
 
            var cate = sessionStorage.CodC;  
+           
     		$.getJSON("http://localhost/php/elista.php",{idC:cate}, mostrar);
 			$('#re li').remove();
     			datos[i] = mostrar.items;
@@ -607,6 +611,7 @@
 			for (var i = 0;i < count; i++) {
 				html += '<li ><a href="#detalle" onclick="sessionStorage.idP='+datos[i].id_platillo+'" >';
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen+'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -667,7 +672,7 @@
        function mostrarDatos(datos){
          		var count = datos.length
 			for (var i = 0;i < count; i++) {
-				html ='<h2 id="le">'+datos[i].platillo+'</h2>';
+				html ='<h2 id="le">'+datos[i].platillo+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $'+datos[i].precio+'</h2>';
 				html +='<div id="im">'
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" style="width:98%; height:250px; border-radius: 10%; "  alt=""></div>';
 				html +='<h4 >'+datos[i].descripcion+'</h4>';
@@ -1035,6 +1040,7 @@
 			for (var i = 0;i < count; i++) {
 				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1074,6 +1080,7 @@
 			for (var i = 0;i < count; i++) {
 				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1212,6 +1219,7 @@
 			for (var i = 0;i < count; i++) {
 				html += '<li><a href="#cantpopupbuffet" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1349,6 +1357,7 @@
 			for (var i = 0;i < count; i++) {
 				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1373,6 +1382,7 @@
 			for (var i = 0;i < count; i++) {
 				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1401,6 +1411,7 @@
 			for (var i = 0;i < count; i++) {
 				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
 				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1784,6 +1795,7 @@
 			for (var i = 0;i < count; i++) {
 				htm +='<li><a  href="#modcantidad" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.Pl='+datos[i].id_platillo+'" >'
 				htm +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				htm += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
 				htm += '<p><strong>'+ datos[i].platillo +'</strong></p>';
 				htm += '<p> Reservados '+ datos[i].cantidad +' Platillos</p>';
                 htm += '</a></li>';
@@ -1794,6 +1806,7 @@
     		$('#even').listview('refresh');
 
     		contadorplatillo(eve);
+    		calcularprecio (eve);
 		}
            
        
@@ -1814,6 +1827,18 @@
 			}
 
 
+			function calcularprecio (pre) {
+					$.getJSON("http://localhost/php/CalcularPrecio.php",{idCo:sessionStorage.idE}, Contador);
+
+			               function Contador(datos){
+			         		var count = datos.length
+			               
+						$("#pago").text("Pago: $" +(datos.total/2));
+						
+					}
+			}
+
+
 
 </script>
 <style type="text/css">
@@ -1826,6 +1851,17 @@
 		bottom: 0;
 		margin-bottom: 10px;
 		margin-right: 10px;
+		right: 0;
+	}
+
+	#pago{
+		border-radius: 50%;
+		background-color: white;
+		position: fixed;
+		color: black;
+		bottom: 0;
+		margin-bottom: 10px;
+		margin-right: 70px;
 		right: 0;
 	}
 </style>
@@ -1866,7 +1902,7 @@
        </div>
 
        <div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
-<a href="#Agregar" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Agregar Platillo</a><center><div id="counta"></div></center>
+<a href="#Agregar" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Agregar Platillo</a><center><div id="pago"></div><div id="counta"></div></center>
 	</div><!-- /footer -->
 
 	<script type="text/javascript">
