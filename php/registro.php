@@ -8,7 +8,7 @@ if (!empty($_GET)) {
        //$telefono = $_REQUEST["telefono"];
     require_once("conexion.php");
 	$obj = new Conexion();
-	$pst = $obj->conexion->prepare("INSERT INTO clientes VALUES(:correo,:nombre,:apellido)");
+	$pst = $obj->conexion->prepare("INSERT INTO clientes(correo, nombre, apellido) VALUES(:correo,:nombre,:apellido)");
 	$pst->bindValue(":correo", $correo);
 	$pst->bindValue(":nombre", $nombre);
 	$pst->bindValue(":apellido", $apellido);
@@ -24,6 +24,6 @@ if (!empty($_GET)) {
 	$nuevousuario->execute();
     echo '{"loggerPHP" : "Datos ingresados con exito"}';
     $obj->conexion = null;
-   }
+  // }
 	
 ?>
