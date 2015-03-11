@@ -16,10 +16,11 @@
 <link rel="stylesheet" type="text/css" href="css/jquery.timepicker.min.css">
 <script type="text/javascript" src="js/jquery.timepicker.min.js"></script>
 <script type="text/javascript">
+	var dominio = "localhost";
 	$.ajaxSetup({
 	  timeout: 2000
 	});
-	$( document ).on( "pagecreate", "#reservacion", function() {
+	$( document ).ready(function() {
 	var today = new Date();
 	var dd = today.getDate();
 	var mm = today.getMonth()+1; //January is 0!
@@ -33,12 +34,6 @@
 	today = yyyy+'-'+mm+'-'+dd;	
 	document.getElementById("fecha").setAttribute("min", today);
     var picker = $( "input[type='date']", this );
-    $('#hora').timepicker({
-    	 timeFormat: 'HH:mm',
-    	 minTime: '08:00:00',
-    	 maxTime: '21:00:00',
-    	 interval: 30
-    });
     picker.mobipick({
     	locale: "ES"
     });
@@ -55,7 +50,11 @@
 			$.mobile.changePage( "#principal" , { role: "page "});
 		};
 	});
-
+	function twoDecimals(figure, decimals){
+		if (!decimals) decimals = 2;
+		var d = Math.pow(10,decimals);
+		return (parseInt(figure*d)/d).toFixed(decimals);
+	};
 </script>
 </head>
 
@@ -127,7 +126,7 @@
 			$(document).ready(function(){
 				$("#btnlogin").click(function(){
 					if (validarLogin() == true) {
-						var url = "http://localhost/php/login.php";
+						var url = "http://"+dominio+"/php/login.php";
 						$.getJSON(url ,{correo:$("#email").val(), pass:$("#pwd").val()}, mostrarDatos)
 						.fail(function(){
 							alert("No se puede conectar al servidor");
@@ -234,7 +233,7 @@
 	   $(document).ready(function(){
 			$("#Insertar").click(function(){
 				if (validarReg() == true) {
-				$.getJSON("http://localhost/php/registro.php",
+				$.getJSON("http://"+dominio+"/php/registro.php",
 					{nombre:$("#nombre").val(), 
 					apellido:$("#apellido").val(), 
 					correo:$("#correo").val(),
@@ -327,17 +326,7 @@
 			     		$('#popReg' ).popup('open');
 			     		return false;
 			         };
-			         /*
-			         if (document.forms["reg"]["dui"].value == "") {
-			     		$('#txtReg').html("Ingrese su DUI");
-			     		$('#popReg' ).popup('open');
-			     		return false;
-			         };
-			         if (document.forms["reg"]["telefono"].value == "") {
-			     		$('#txtReg').html("Ingrese su telefono");
-			     		$('#popReg' ).popup('open');
-			     		return false;
-			         };*/
+			    
 			         return true;
 			    }
 				function regCorreo(){
@@ -350,16 +339,6 @@
 					    return false;
 					}
 				}
-                /*
-				function regDUI(){
-					if (document.forms['reg']['dui'].value.match(/(^\d{8})-(\d$)/)){
-					    
-					}
-					else{
-						alert("Formato de DUI incorrecto \n Formato: 12345678-9");
-						return false;
-					}
-				}*/
 
         	</script>
         	<div data-role="popup" id="popReg" data-overlay-theme="a">
@@ -478,9 +457,9 @@
 				}
 					
 				nav li a:hover{ border-bottom: 0px; color: #fff;}
-				/*nav li:first-child a{ border-left: 10px solid #3498db; }*/
-				nav li:nth-child(1) a{ border-left: 10px solid #ffd071; }
+				nav li:first-child a{ border-left: 10px solid #3498db; }
 				nav li:nth-child(2) a{ border-left: 10px solid #f0776c; }
+				nav li:nth-child(3) a{ border-left: 10px solid #ffd071; }
 				nav li:last-child a{ border-left: 10px solid #1abc9c; }
 
 				nav li a:after { 
@@ -496,9 +475,9 @@
 				}
 
 				nav li a:hover:after{ width: 100%; }
-				/*nav li:first-child a:after{ background: #3498db; }*/
-				nav li:nth-child(1) a:after{ background: #ffd071; }
+				nav li:first-child a:after{ background: #3498db; }
 				nav li:nth-child(2) a:after{ background: #f0776c; }
+				nav li:nth-child(3) a:after{ background: #ffd071; }
 				nav li:last-child a:after{ background: #1abc9c; }
 
 				nav div{
@@ -512,6 +491,7 @@
 				  <ul>
 				    <li><a href="#reservacion" style="color: #444;"><img src="Imagenes/pluss.jpg" alt="Reservacion" class="ui-li-icon ui-corner-none">Hacer una reserva</a></li>
 				    <li><a href="#categoria" style="color: #444;"><img src="Imagenes/platillos.png" alt="Platillos" class="ui-li-icon ui-corner-none">Platillos</a></li>
+				    <li><a href="#promociones" style="color: #444;"><img src="Imagenes/alert.png" alt="Promociones" width="24px" class="ui-li-icon ui-corner-none">Promociones</a></li>
 				    <li><a href="#meventos" style="color: #444;"><img src="Imagenes/reservar.png" alt="Reservacion" class="ui-li-icon ui-corner-none">Mis eventos</a></li>
 				  </ul>
 				</nav>
@@ -551,7 +531,7 @@
 
 <script type="text/javascript">
    
-   		$.getJSON("http://localhost/php/categorias.php", mostrar);
+   		$.getJSON("http://"+dominio+"/php/categorias.php", mostrar);
 			$('#res li').remove();
     			datos[i] = mostrar.items;
 
@@ -601,7 +581,7 @@
 
            var cate = sessionStorage.CodC;  
            
-    		$.getJSON("http://localhost/php/elista.php",{idC:cate}, mostrar);
+    		$.getJSON("http://"+dominio+"/php/elista.php",{idC:cate}, mostrar);
 			$('#re li').remove();
     			datos[i] = mostrar.items;
 
@@ -610,8 +590,8 @@
          		html = '<li data-role="list-divider"> <div id="letra"><center><h3>Seleccionar Platillo</h3></center></div> ';
 			for (var i = 0;i < count; i++) {
 				html += '<li ><a href="#detalle" onclick="sessionStorage.idP='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen+'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen+'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -667,14 +647,14 @@
     $("#detalle").on("pageshow", function(){ 
      
         var cod = sessionStorage.idP;
-       $.getJSON("http://localhost/php/codigolista.php?id="+cod+"", mostrarDatos)
+       $.getJSON("http://"+dominio+"/php/codigolista.php?id="+cod+"", mostrarDatos)
 
        function mostrarDatos(datos){
          		var count = datos.length
 			for (var i = 0;i < count; i++) {
-				html ='<h2 id="le">'+datos[i].platillo+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $'+datos[i].precio+'</h2>';
+				html ='<h2 id="le">'+datos[i].platillo+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $'+twoDecimals(datos[i].precio)+'</h2>';
 				html +='<div id="im">'
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" style="width:98%; height:250px; border-radius: 10%; "  alt=""></div>';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" style="width:98%; height:250px; border-radius: 10%; "  alt=""></div>';
 				html +='<h4 >'+datos[i].descripcion+'</h4>';
 			};
 
@@ -834,12 +814,14 @@
 			$("#btnPaso1").click(function(){
 				if (validarEvento() == true) {
                  sessionStorage.setItem("opcion", $("#select-native-3").val());
-				$.getJSON("http://localhost/php/evento.php",
+				$.getJSON("http://"+dominio+"/php/evento.php",
 					{tipo:$("#select-native-3").val(),
 					fecha:$("#fecha").val(),
 					hora:$("#hora").val(),
 					canti:$("#cant").val(),
-					mail:localStorage.getItem('usuario')},
+					mail:localStorage.getItem('usuario'),
+					dui:$("#dui").val(),
+					tel:$("#telefono").val()},
 					rept);		
 
 
@@ -849,6 +831,8 @@
 					$("#fecha").val('');
 					$("#hora").val('');
 					$("#cant").val('1');
+					$("#dui").val();
+					$("#tel").val();
 				};
 		   });
 	});
@@ -859,6 +843,35 @@
 	        sessionStorage.setItem("codigo", datos.codd);
 
 		     $.mobile.changePage( "#paso2" , { role: "page" } );
+	}
+	function horarios(tiempo){
+		$("#divHora").html("");
+		$("#divHora").html('<div class="ui-input-text ui-body-a ui-corner-all ui-shadow-inset"><input type="text" id="hora" name="hora" placeholder="Hora" class="form-control" width="100%" data-theme="a" readonly></div>');
+					if (tiempo == "Desayuno") {
+	                	servi = "Desayuno";
+	                	$('#hora').timepicker({
+					    	 timeFormat: 'HH:mm',
+					    	 minTime: '08:00:00',
+					    	 maxTime: '11:00:00',
+					    	 interval: 30
+					    });  
+	                }else if(tiempo == "Almuerzo"){
+	                	servi = "Almuerzo";
+	                	$('#hora').timepicker({
+					    	 timeFormat: 'HH:mm',
+					    	 minTime: '11:30:00',
+					    	 maxTime: '14:30:00',
+					    	 interval: 30
+					    }); 
+	                }else{
+	                	servi = "Cena";
+	                	$('#hora').timepicker({
+					    	 timeFormat: 'HH:mm',
+					    	 minTime: '16:00:00',
+					    	 maxTime: '21:00:00',
+					    	 interval: 30
+					    }); 
+	                }
 	}
 	</script>
 	<div data-role="header" style="overflow:hidden; " data-theme="a">
@@ -894,7 +907,8 @@
 		<form data-role="form" name="evento">
 		<center>
 			<div data-role="fieldcontain"  class="form-group" >
-			    <select name="select-native-3" id="select-native-3" data-iconpos="left" data-theme="a" >
+			    <select name="select-native-3" id="select-native-3" data-iconpos="left" data-theme="a" onchange="horarios(this.value);">
+			    	<option disabled selected value="" hidden>Tipo de evento</option>
                    <option value="Desayuno">Desayuno</option>
                    <option value="Almuerzo">Almuerzo</option>
                    <option value="Cena">Cena</option>
@@ -905,14 +919,21 @@
 				
 				<input type="date" id="fecha" name="fecha" placeholder="Fecha" data-theme="a" readonly>
 		    </div>
-			<div class="form-group">
-				<input type="text" id="hora" name="hora" value="08:00" placeholder="Hora" class="form-control" data-theme="a" readonly>
+			<div class="form-group" id="divHora">
+				
+		    </div>
+		    <div class="form-group">
+				
+				<input type="text" id="dui" name="dui" placeholder="DUI" data-theme="a" onblur="regDUI()">
+		    </div>
+		    <div class="form-group">
+				
+				<input type="text" id="telefono" name="telefono" placeholder="Telefono" data-theme="a"	>
 		    </div>
 		    <div class="form-group">
 		    	<label style="color: 2A2A2A;">Cantidad de personas</label>
 				<input type="text" data-role="spinbox" name="cant" id="cant" value="1" min="1" max="100" readonly />
 			</div>
-			<div id="txtHora class="txtPop""></div>
 		    <center>
 		    <p>
 			    <input type="reset" data-role="button" data-mini="true" data-inline="true" value="Limpiar">
@@ -924,6 +945,11 @@
           </div>    
           <script type="text/javascript">
           		function validarEvento(){
+          			if (document.forms["evento"]["select-native-3"].value=="") {
+			     			$('#txtEvento').html("Seleccione el tipo de evento");
+			     			$('#popEvento' ).popup('open');
+			     			return false;
+			     	};
 			     	if (document.forms["evento"]["fecha"].value == "") {
 			     		$('#txtEvento').html("Seleccione la fecha");
 			     		$('#popEvento' ).popup('open');
@@ -939,32 +965,30 @@
 			     		$('#popEvento' ).popup('open');
 			     		return false;
 			     	};
-			     	if (document.forms["evento"]["select-native-3"].value=="Desayuno") {
-			     		if (document.forms["evento"]["hora"].value >"11:00") {
-			     			$('#txtEvento').html("El horario de desayunos es de 08:00 a 11:00");
-			     			$('#popEvento' ).popup('open');
-			     			return false;
-			     		};
-			     	};
-			     	if (document.forms["evento"]["select-native-3"].value=="Almuerzo") {
-			     		if (document.forms["evento"]["hora"].value <"12:00" || document.forms["evento"]["hora"].value > "15:00") {
-			     			$('#txtEvento').html("El horario de almuerzo es de 12:00 a 15:00");
-			     			$('#popEvento' ).popup('open');
-			     			return false;
-			     		};
-			     	};
-			     	if (document.forms["evento"]["select-native-3"].value=="Cena") {
-			     		if (document.forms["evento"]["hora"].value <"16:00") {
-			     			$('#txtEvento').html("El horario de cena es de 16:00 en adelante");
-			     			$('#popEvento' ).popup('open');
-			     			return false;
-			     		};
-			     	};
+			         if (document.forms["evento"]["dui"].value == "") {
+			     		$('#txtEvento').html("Ingrese su DUI");
+			     		$('#popEvento' ).popup('open');
+			     		return false;
+			         };
+			         if (document.forms["evento"]["telefono"].value == "") {
+			     		$('#txtEvento').html("Ingrese su telefono");
+			     		$('#popEvento' ).popup('open');
+			     		return false;
+			         };
 			         return true;
-			    }
+				}
+				function regDUI(){
+					if (document.forms['evento']['dui'].value.match(/(^\d{8})-(\d$)/)){
+					    
+					}
+					else{
+						alert("Formato de DUI incorrecto \n Formato: 12345678-9");
+						return false;
+				}
+			 }
           </script>
           <div data-role="popup" id="popEvento" data-overlay-theme="a" width="200px" style="background:white;">
-		         <div id="txtEven class="txtPop"to" style="color= white"></div>
+		         <div id="txtEvento" class="txtPop" style="color= white"></div>
 		 	</div>
 		</p>
 	</div><!-- /content -->
@@ -1029,7 +1053,7 @@
         
         if (op=="Desayuno") {
             var  idpl= 1 ; 
-             $.getJSON("http://localhost/php/elista.php",{idC:idpl}, mostrar);
+             $.getJSON("http://"+dominio+"/php/elista.php",{idC:idpl}, mostrar);
 			$('#rep li').remove();
     			datos[i] = mostrar.items;
                  
@@ -1038,9 +1062,9 @@
          		var count = datos.length
          html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
 			for (var i = 0;i < count; i++) {
-				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'; sessionStorage.unit='+twoDecimals(datos[i].precio)+'" >';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1069,7 +1093,7 @@
 
          if(op=="Cena"){
               var  idpl= 2 ; 
-             $.getJSON("http://localhost/php/elista.php",{idC:idpl}, mostrar);
+             $.getJSON("http://"+dominio+"/php/elista.php",{idC:idpl}, mostrar);
 			$('#rep li').remove();
     			datos[i] = mostrar.items;
                  
@@ -1078,9 +1102,9 @@
          		var count = datos.length
          html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
 			for (var i = 0;i < count; i++) {
-				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				html += '<li><a href="#cantpopup" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'; sessionStorage.unit='+twoDecimals(datos[i].precio)+';" >';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1112,7 +1136,7 @@
 			            <hr>
 			            <br>
 			            <div class="form-group" >
-						    <input type="text" data-role="spinbox" name="cantidad" id="cantidad" value="1" min="1" max="100" />
+						    <input type="text" data-role="spinbox" name="cantidad1" id="cantidad1" value="1" min="1" max="100" />
 					    </div>
 					    <center>
 				       <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="cantidad_Platillos" name="cantidad_Platillos" >
@@ -1127,10 +1151,11 @@
 	<script type="text/javascript">
            $(document).ready(function(){
 				$("#cantidad_Platillos").click(function(){
-					$.getJSON("http://localhost/php/orden.php",
+					$.getJSON("http://"+dominio+"/php/orden.php",
 						{ idreservacion:sessionStorage.getItem("codigo"), 
                           idplatillo:sessionStorage.idPla,
-						cantidad:$("#cantidad").val()},
+						cantidad:$("#cantidad1").val(),
+						unitario:sessionStorage.getItem("unit")},
 						DatosPlat);
 					});
 				});
@@ -1208,7 +1233,7 @@
            var buffet = sessionStorage.buffet;  
           
            
-    	$.getJSON("http://localhost/php/elista.php",{idC:buffet}, mostrar);
+    	$.getJSON("http://"+dominio+"/php/elista.php",{idC:buffet}, mostrar);
 			$('#rep li').remove();
     			datos[i] = mostrar.items;
                  
@@ -1217,9 +1242,9 @@
          		var count = datos.length
          html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
 			for (var i = 0;i < count; i++) {
-				html += '<li><a href="#cantpopupbuffet" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				html += '<li><a href="#cantpopupbuffet" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'; sessionStorage.unit='+twoDecimals(datos[i].precio)+'" >';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1266,7 +1291,7 @@
 			            <hr>
 			            <br>
 			            <div class="form-group" >
-						    <input type="text" data-role="spinbox" name="cantidad" id="cantidad" value="1" min="1" max="100" />
+						    <input type="text" data-role="spinbox" name="cantidad2" id="cantidad2" value="1" min="1" max="100" />
 					    </div>
 					    <center>
 				       <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="cantidad_Platillosbuffet" name="cantidad_Platillosbuffet" >
@@ -1281,10 +1306,11 @@
 	<script type="text/javascript">
            $(document).ready(function(){
 				$("#cantidad_Platillosbuffet").click(function(){
-					$.getJSON("http://localhost/php/orden.php",
+					$.getJSON("http://"+dominio+"/php/orden.php",
 						{ idreservacion:sessionStorage.getItem("codigo"), 
                           idplatillo:sessionStorage.idPla,
-						cantidad:$("#cantidad").val()},
+						cantidad:$("#cantidad2").val(),
+						unitario:sessionStorage.getItem("unit")},
 						DatosPlat);
 					});
 				});
@@ -1346,7 +1372,7 @@
 
         if (comida==2) {
             var  idcomi= 2 ; 
-             $.getJSON("http://localhost/php/elista.php",{idC:idcomi}, mostrarcarta);
+             $.getJSON("http://"+dominio+"/php/elista.php",{idC:idcomi}, mostrarcarta);
 			$('#rep li').remove();
     			datos[i] = mostrar.items;
                  
@@ -1355,9 +1381,9 @@
          		var count = datos.length
          html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
 			for (var i = 0;i < count; i++) {
-				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'; sessionStorage.unit='+twoDecimals(datos[i].precio)+'" >';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1371,7 +1397,7 @@
 
           if (comida==4) {
             var  bebida= 4 ; 
-             $.getJSON("http://localhost/php/elista.php",{idC:bebida}, bebidass);
+             $.getJSON("http://"+dominio+"/php/elista.php",{idC:bebida}, bebidass);
 			$('#rep li').remove();
     			datos[i] = mostrar.items;
                  
@@ -1380,9 +1406,9 @@
          		var count = datos.length
          html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
 			for (var i = 0;i < count; i++) {
-				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'; sessionStorage.unit='+twoDecimals(datos[i].precio)+'" >';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1400,7 +1426,7 @@
 
           if (comida==5) {
             var  postre= 5; 
-             $.getJSON("http://localhost/php/elista.php",{idC:postre}, postress);
+             $.getJSON("http://"+dominio+"/php/elista.php",{idC:postre}, postress);
 			$('#rep li').remove();
     			datos[i] = mostrar.items;
                  
@@ -1409,9 +1435,9 @@
          		var count = datos.length
          html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
 			for (var i = 0;i < count; i++) {
-				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				html += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				html += '<li><a href="#cantpopupcarta" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.idPla='+datos[i].id_platillo+'; sessionStorage.unit='+twoDecimals(datos[i].precio)+'" >';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -1447,7 +1473,7 @@
 			            <hr>
 			            <br>
 			            <div class="form-group" >
-						    <input type="text" data-role="spinbox" name="cantidad" id="cantidad" value="1" min="1" max="100" />
+						    <input type="text" data-role="spinbox" name="cantidad3" id="cantidad3" value="1" min="1" max="100" />
 					    </div>
 					    <center>
 				       <input type="button" data-role="button"  data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Aceptar" id="cantidad_Platilloscarta" name="cantidad_Platilloscarta" >
@@ -1462,10 +1488,11 @@
 	<script type="text/javascript">
            $(document).ready(function(){
 				$("#cantidad_Platilloscarta").click(function(){
-					$.getJSON("http://localhost/php/orden.php",
+					$.getJSON("http://"+dominio+"/php/orden.php",
 						{ idreservacion:sessionStorage.getItem("codigo"), 
                           idplatillo:sessionStorage.idPla,
-						cantidad:$("#cantidad").val()},
+						cantidad:$("#cantidad3").val(),
+						unitario:sessionStorage.getItem("unit")},
 						DatosPlatalm);
 					});
 				});
@@ -1714,6 +1741,233 @@
 <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+<div data-role="page" id="promociones">
+
+<style type="text/css">
+	#Over{
+		position:absolute;
+		width:25%;
+		background-color:rgba(25, 13, 44, 0.85);
+		border: 1px solid black;
+		border-radius: 10px;
+		color:white;
+		top:0;
+		right:0;
+		padding: 13px 3px 13px 3px;
+		font-size:16px;
+		z-index:5;
+	}
+</style>
+<script type="text/javascript">
+	     $("#promociones").on("pageshow", function(){        
+
+    		$.getJSON('http://'+dominio+'/php/JSON_promocion.php', function(datos) {
+    			$("#nopromo").html("");
+    			$(".promo").html("");
+                    if (datos.length < 1 ) {
+                        $('#nopromo').append('<h3 style="color:black;">No hay promociones disponibles en este momento.</h3>');
+                    }
+                                
+                    $.each(datos, function(i, campo) {
+	           			$(".promo").append("<a href='#reservarPromo' onClick='sessionStorage.promo="+campo.id_platillo+"; sessionStorage.precioPromo="+campo.precio+"'><div id='Over'>$ "+twoDecimals(campo.precio)+"</div><img width='100%' src='http://"+dominio+"/meson/img/"+campo.ruta+"' /></a><p>"+campo.descripcion+"</p><hr>");
+	           		});
+                })
+                .fail(function() {
+                    alert("No se puede conectar al servidor.");
+                });
+		
+     });
+
+</script>
+
+	<div data-role="header" data-theme="a">
+ 			<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+        <a href="#principal"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+     
+    </div><!-- /header -->
+
+	<div data-role="content" >
+		<p>
+		 <center>
+          <div id="nopromo">
+		</div>
+		<div class="promo" style="position: relative;"></div>
+		</center>
+
+		</p>
+	</div><!-- /content -->
+</div><!-- /page -->
+
+
+<div data-role="page" id="reservarPromo">
+
+
+<script type="text/javascript">
+	     $("#reservarPromo").on("pageshow", function(){      
+	    	promo = sessionStorage.getItem("promo");
+	    	precioPromo = sessionStorage.getItem("precioPromo");
+	    	$("#detallePromo").html("");
+    		$.getJSON("http://"+dominio+"/php/platilloPromocion.php", {idPlat:promo}, function(datos){
+	            $.each(datos, function(i, campo){
+	                $("#detallePromo").append("<img width='200px' height='100px' src='http://"+dominio+"/meson/platillos/"+campo.imagen+"'><p>"+campo.platillo+"</p><p><b>Precio promocional<b><em>: "+twoDecimals(precioPromo)+"</em></p>");
+	                if (campo.id_servicio == 1) {
+	                	servi = "Desayuno";
+	                	$('#horaProm').timepicker({
+					    	 timeFormat: 'HH:mm',
+					    	 minTime: '08:00:00',
+					    	 maxTime: '11:00:00',
+					    	 interval: 30
+					    });  
+	                }else if(campo.id_servicio == 2){
+	                	servi = "Almuerzo";
+	                	$('#horaProm').timepicker({
+					    	 timeFormat: 'HH:mm',
+					    	 minTime: '11:30:00',
+					    	 maxTime: '14:30:00',
+					    	 interval: 30
+					    }); 
+	                }else{
+	                	servi = "Cena";
+	                	$('#horaProm').timepicker({
+					    	 timeFormat: 'HH:mm',
+					    	 minTime: '16:00:00',
+					    	 maxTime: '21:00:00',
+					    	 interval: 30
+					    }); 
+	                }
+	            });
+	        })
+			
+            $("#reserProm").click(function(){
+				if (validarProm() == true) {
+				$.getJSON("http://"+dominio+"/php/evento.php",
+					{tipo:servi,
+					fecha:$("#fechaProm").val(),
+					hora:$("#horaProm").val(),
+					canti:$("#cantProm").val(),
+					mail:localStorage.getItem('usuario')},
+					confirmarProm);		
+				}
+				
+		   });
+
+            function confirmarProm(datos){
+   		        var id_reser = datos.codd;
+   		        $.getJSON("http://"+dominio+"/php/orden.php", {idreservacion:id_reser, idplatillo:sessionStorage.getItem("promo"),cantidad:$("#cantProm").val(),
+						unitario:sessionStorage.getItem("unit"),unitario:sessionStorage.getItem("precioPromo")}, function(datos){});
+					$("#fechaProm").val('');
+					$("#horaProm").val('');
+					$("#cantProm").val('1');
+		     	$.mobile.changePage( "#confirmacion" , { role: "page" } );
+			}
+     });
+	function validarProm(){
+		if (document.forms["promocion"]["fechaProm"].value == "") {
+			$('#txtProm').html("Seleccione la fecha");
+			$('#popProm' ).popup('open');
+			return false;
+		};
+		if (document.forms["promocion"]["horaProm"].value == "") {
+			$('#txtProm').html("Seleccione la hora");
+			$('#popProm' ).popup('open');
+			return false;
+		};
+		if (document.forms["promocion"]["cantProm"].value == "") {
+			$('#txtProm').html("Seleccione la cantidad de platillos");
+			$('#popProm' ).popup('open');
+			return false;
+		};
+		return true;
+	}
+</script>
+
+	<div data-role="header" data-theme="a" style="padding-top:0px;">
+ 			<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+        <a href="#principal"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+     
+    </div><!-- /header -->
+
+	<div data-role="content" >
+		 <center>
+				<div id="detallePromo"></div>
+				
+		<center>
+		<form data-role="form" name="promocion">
+			<div class="form-group">
+				
+				<input type="date" id="fechaProm" name="fechaProm" placeholder="Fecha" data-theme="a" readonly>
+		    </div>
+			<div class="form-group">
+				<input type="text" id="horaProm" name="horaProm" placeholder="Hora" class="form-control" data-theme="a" readonly>
+		    </div>
+		    <div class="form-group">
+		    	<label style="color: 2A2A2A;">Cantidad de platillos</label>
+				<input type="text" data-role="spinbox" name="cantProm" id="cantProm" value="1" min="1" max="100" readonly />
+			</div>
+			<div id="txtHora class="txtPop""></div>
+		    <center>
+		    <p>
+			    <input type="button" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a" value="Reservar platillos" id="reserProm" name="reserProm">
+			</p>
+			</center>
+	    </center>	    
+        </form>
+		</center>
+		<div data-role="popup" id="popProm" data-overlay-theme="a" width="200px" style="background:white;">
+		    <div id="txtProm" class="txtPop" style="color= white"></div>
+		</div>
+	</div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role="page" id="confirmacion">
+
+
+	<div data-role="header" data-theme="a" style="padding-top:0px;">
+ 			<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+        <a href="#principal"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+     
+    </div><!-- /header -->
+
+	<div data-role="content" >
+		<p>
+		 <center><img src="Imagenes/Meson.png" width="250" height="75"></center>
+			<center><h2 style="font-family:Andalus;">Gracias Por Preferirnos</h2>
+			<h3 style="font-family:Andalus;">Un empleado se comunicará con usted, para confirmar su solicitud.  </h3> </center>
+         <p>
+         	<center><a href="#principal" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Aceptar</a></center>
+
+		</p>
+	</div><!-- /content -->
+</div><!-- /page -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div data-role="page" id="meventos">
 
 
@@ -1721,7 +1975,7 @@
 	     $("#meventos").on("pageshow", function(){        
 
             
-    		$.getJSON("http://localhost/php/meventos.php",{mail:localStorage.getItem("usuario")}, mostrarev);
+    		$.getJSON("http://"+dominio+"/php/meventos.php",{mail:localStorage.getItem("usuario")}, mostrarev);
 			$('#lit li').remove();
     			datos[i] = mostrarev.items;
                  
@@ -1776,14 +2030,18 @@
 
 
 <div data-role="page" id="detalleevento">
-
+<div data-role="header" data-theme="a" style="padding-top:0px;">
+ 	<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+        <a href="#meventos"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+</div>
 
 <script type="text/javascript">
 	     $("#detalleevento").on("pageshow", function(){        
 
            var eve = sessionStorage.idE;  
          
-    		$.getJSON("http://localhost/php/consultaevento.php",{ideve:eve}, consultaplatillos);
+    		$.getJSON("http://"+dominio+"/php/consultaevento.php",{ideve:eve}, consultaplatillos);
 			$('#even li').remove();
     			datos[i] = consultaplatillos.items;
                  
@@ -1794,8 +2052,8 @@
           htm += '</h2></div></center><hr>';
 			for (var i = 0;i < count; i++) {
 				htm +='<li><a  href="#modcantidad" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.Pl='+datos[i].id_platillo+'" >'
-				htm +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
-				htm += '<p class="ui-li-aside" ><strong> $'+ datos[i].precio +'</strong></p>';
+				htm +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				htm += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].preciounitario) +'</strong></p>';
 				htm += '<p><strong>'+ datos[i].platillo +'</strong></p>';
 				htm += '<p> Reservados '+ datos[i].cantidad +' Platillos</p>';
                 htm += '</a></li>';
@@ -1807,6 +2065,7 @@
 
     		contadorplatillo(eve);
     		calcularprecio (eve);
+    		comprobarEvento(eve);
 		}
            
        
@@ -1816,7 +2075,7 @@
      });
 
 			function contadorplatillo (co) {
-					$.getJSON("http://localhost/php/ContadorPlatillos.php",{idCount:sessionStorage.idE}, Contador);
+					$.getJSON("http://"+dominio+"/php/ContadorPlatillos.php",{idCount:sessionStorage.idE}, Contador);
 
 			               function Contador(datos){
 			         		var count = datos.length
@@ -1828,17 +2087,40 @@
 
 
 			function calcularprecio (pre) {
-					$.getJSON("http://localhost/php/CalcularPrecio.php",{idCo:sessionStorage.idE}, Contador);
+					$.getJSON("http://"+dominio+"/php/CalcularPrecio.php",{idCo:sessionStorage.idE}, Contador);
 
 			               function Contador(datos){
 			         		var count = datos.length
 			               
-						$("#pago").text("Pago: $" +(datos.total/2));
+						$("#pago").text("Pago: $" +(twoDecimals(datos.total)));
 						
 					}
 			}
 
 
+			function comprobarEvento(id){
+				$.getJSON("http://"+dominio+"/php/comprobarEvento.php", {idR:id}, function(datos){
+					$("#btnCancelar").html('');
+					if (datos.visto == "0") {
+						$("#btnCancelar").append("<input  type='button'  id='cancelarEve' name='cancelarEve' value='Cancelar evento' data-theme='a' data-icon='check' onclick='cancelarEve("+id+")' />");
+						document.getElementById("add").style.visibility = "initial";
+					}else{
+						$("#btnCancelar").append('<h4>Este evento ha sido aprobado. Si desea hacer modificaciones o cancelarlo por favor contactese con el personal del Mesón.</h4>');
+							document.getElementById("add").style.visibility = "hidden";
+					}
+				})
+			}
+
+			function cancelarEve(id) {
+				var r = confirm("¿Esta seguro de eliminar el evento?");
+				if (r == true) {
+					$.getJSON("http://"+dominio+"/php/cancelarEvento.php", {idRe:id}, function(datos){
+						if (datos.msj == "1") {
+							$.mobile.changePage("#cancelado", {role : "page"});
+						};
+					})
+				};
+			}
 
 </script>
 <style type="text/css">
@@ -1863,18 +2145,21 @@
 		margin-bottom: 10px;
 		margin-right: 70px;
 		right: 0;
+		padding-right: 17px;
 	}
 </style>
 
 	<div data-role="content" >
 		<p>
 		
-		 <center>
-		           <div class="lis">
+		<center>
+		<div class="lis">
 		    <ul data-role="listview" data-filter="true" data-input="#filter-input" data-theme="a" id="even"  class="ui-btn-active">
 		    	
 			</ul>
+			<br><br>
 		</div>
+		<div id="btnCancelar"></div>
 		</center>
 
 		</p>
@@ -1901,17 +2186,18 @@
 		    
        </div>
 
-       <div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;">
-<a href="#Agregar" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Agregar Platillo</a><center><div id="pago"></div><div id="counta"></div></center>
+       <div data-role="footer" data-theme="a" style="position: fixed; bottom:0; left:0; right:0; margin-top=20px;" id="btnagre">
+<a href="#Agregar" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a" id="add">Agregar Platillo</a><center><div id="pago"></div><div id="counta"></div></center>
 	</div><!-- /footer -->
 
 	<script type="text/javascript">
            $(document).ready(function(){
 				$("#modCant").click(function(){
-					$.getJSON("http://localhost/php/modCantidad.php",
+					$.getJSON("http://"+dominio+"/php/modCantidad.php",
 						{ idevent:sessionStorage.idE, 
                           iplatillo:sessionStorage.Pl,
-						cantidad:$("#cantid").val()},
+						cantidad:$("#cantid").val(),
+						unitario:sessionStorage.getItem("unit")},
 						Dato);
 					});
 				});
@@ -1924,7 +2210,27 @@
 </div><!-- /page -->
 
 
+<div data-role="page" id="cancelado">
 
+
+	<div data-role="header" data-theme="a" style="padding-top:0px;">
+ 			<div class="ui-icon-nodisc" align="left"><!-- Class added to the wrapper -->
+        <a href="#principal"  data-role="button"  data-icon="arrow-l" data-iconpos="notext" data-theme="a" data-iconshadow="false" data-inline="true">Bars</a>
+    </div>
+     
+    </div><!-- /header -->
+
+	<div data-role="content" >
+		<p>
+		 <center><img src="Imagenes/Meson.png" width="250" height="75"></center>
+			<center><h2 style="font-family:Andalus;">Su evento ha sido cancelado exitosamente.</h2>
+			<h3 style="font-family:Andalus;">Recuerde que al preferirnos contribuye a la formación profesional de los tecnicos del ITCA y al desarrollo de El Salvador.</h3> </center>
+         <p>
+         	<center><a href="#principal" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="a">Aceptar</a></center>
+
+		</p>
+	</div><!-- /content -->
+</div><!-- /page -->
 
 
 
@@ -1935,7 +2241,7 @@
 
  <script type="text/javascript">
    
-   		$.getJSON("http://localhost/php/categorias.php", mostrarCate);
+   		$.getJSON("http://"+dominio+"/php/categorias.php", mostrarCate);
 			$('#m li').remove();
     			datos[i] = mostrarCate.items;
 
@@ -1988,7 +2294,7 @@
      $("#AgregarP").on("pageshow", function(){        
 
            var c = sessionStorage.categ;  
-    		$.getJSON("http://localhost/php/elista.php",{idC:c}, mostrarPl);
+    		$.getJSON("http://"+dominio+"/php/elista.php",{idC:c}, mostrarPl);
 			$('#ret li').remove();
     			datos[i] = mostrarPl.items;
                  
@@ -1997,8 +2303,9 @@
          		var count = datos.length
          html = '<li data-role="list-divider"> <div id="letra"><center><h2>Seleccionar Platillo</h2></center></div><hr> ';
 			for (var i = 0;i < count; i++) {
-				html += '<li><a href="#AgregarPlatilloPop" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.CodPla='+datos[i].id_platillo+'" >';
-				html +='<img src="http://localhost/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<li><a href="#AgregarPlatilloPop" data-rel="popup" data-position-to="window" data-transition="pop" onclick="sessionStorage.CodPla='+datos[i].id_platillo+'; sessionStorage.unit='+datos[i].precio+'" >';
+				html +='<img src="http://'+dominio+'/meson/platillos/'+ datos[i].imagen +'" width="120" height="100" style="border-radius: 13%;" alt="">';
+				html += '<p class="ui-li-aside" ><strong> $'+ twoDecimals(datos[i].precio) +'</strong></p>';
 				html += '<h2>'+ datos[i].platillo +'</h2>';
                 html += '</a></li>';
 			};
@@ -2061,10 +2368,11 @@
 	<script type="text/javascript">
            $(document).ready(function(){
 				$("#A").click(function(){
-					$.getJSON("http://localhost/php/orden.php",
+					$.getJSON("http://"+dominio+"/php/orden.php",
 						{ idreservacion:sessionStorage.idE, 
                           idplatillo:sessionStorage.CodPla,
-						  cantidad:$("#can").val()},
+						  cantidad:$("#can").val(),
+							unitario:sessionStorage.getItem("unit")},		
 						Dat);
 					});
 				});
